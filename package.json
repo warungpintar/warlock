@@ -1,0 +1,41 @@
+{
+  "name": "warmock",
+  "version": "0.0.1",
+  "description": "Warung Pintar Mock + Foward Proxy API",
+  "main": "index.js",
+  "scripts": {
+    "dev": "CONFIG_PATH=example/.warlock.yaml nodemon src/index.js",
+    "test": "mocha src/**/*.test.js"
+  },
+  "keywords": [
+    "mock",
+    "api",
+    "proxy",
+    "graphql"
+  ],
+  "author": "wartech",
+  "license": "ISC",
+  "dependencies": {
+    "@graphql-mesh/cli": "^0.11.12",
+    "@graphql-mesh/graphql": "^0.13.13",
+    "@graphql-mesh/openapi": "^0.10.6",
+    "axios": "^0.21.1",
+    "faker": "^5.4.0",
+    "graphql": "^15.4.0",
+    "js-yaml": "^4.0.0",
+    "koa": "2.8.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "7.4.0",
+    "lru-cache": "^6.0.0",
+    "md5": "^2.3.0",
+    "moment": "^2.29.1",
+    "proxy-from-env": "^1.1.0",
+    "qs": "^6.9.6",
+    "ramda": "^0.27.1"
+  },
+  "devDependencies": {
+    "mocha": "^8.3.0",
+    "nodemon": "^2.0.7",
+    "should": "^13.2.3"
+  }
+}
