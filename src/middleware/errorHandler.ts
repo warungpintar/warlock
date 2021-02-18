@@ -1,5 +1,7 @@
+// @ts-nocheck
+// @TODO {proxy} need following @types/koa-bodyparser
 const errorHandler = async (ctx, next) => {
-  return next().catch(err => {
+  return next().catch((err) => {
     const { statusCode, message } = err;
 
     ctx.type = 'json';
@@ -13,5 +15,4 @@ const errorHandler = async (ctx, next) => {
   });
 };
 
-module.exports = errorHandler;
-  
+export default errorHandler;
