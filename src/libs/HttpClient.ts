@@ -1,26 +1,25 @@
-const axios = require('axios');
-const R = require('ramda');
-
-const defaultResolver = require('../defaultResolvers');
+// @ts-nocheck
+// @TODO {httpClient}
+import axios from 'axios';
+import R from 'ramda';
+import defaultResolver from '../defaultResolvers';
 
 const createHttpClient = (config, opts, ctx) => {
   const httpClient = axios.create();
   const { rest } = config;
 
   const hasMockSetup = R.propEq('source', opts.baseURL);
-  const mocker = R.find(hasMockSetup)(rest)
+  const mocker = R.find(hasMockSetup)(rest);
 
   const handleOkResponse = (response) => {
-    const transformResolvers = R.path(
-      [
-        'transforms',
-        opts.url,
-        ctx.request.method.toLowerCase()
-      ]
-    )(mocker);
+    const transformResolvers = R.path([
+      'transforms',
+      opts.url,
+      ctx.request.method.toLowerCase(),
+    ])(mocker);
 
     if (!transformResolvers) {
-      return Promise.resolve(response)
+      return Promise.resolve(response);
     }
 
     // @TODO: RESOLVER MAPPING LOGIC HERE!
@@ -42,26 +41,23 @@ const createHttpClient = (config, opts, ctx) => {
       ...response,
       data: {
         ...response.data,
-        results: response.data.results.map(result => ({
+        results: response.data.results.map((result) => ({
           ...result,
-          name: defaultResolver['faker'](result, { props: 'name.firstName' }, ctx)
+          name: defaultResolver.faker(result, { props: 'name.firstName' }, ctx),
         })),
       },
-    })
+    });
   };
 
-  const handleErrorResponse = error => {
+  const handleErrorResponse = (error) => {
     return Promise.reject(error);
   };
 
-  httpClient.interceptors.response.use(
-    handleOkResponse,
-    handleErrorResponse,
-  );
+  httpClient.interceptors.response.use(handleOkResponse, handleErrorResponse);
 
   return httpClient;
-}
+};
 
-module.exports = {
+export default {
   createHttpClient,
 };

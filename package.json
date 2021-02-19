@@ -2,11 +2,6 @@
   "name": "warmock",
   "version": "0.0.1",
   "description": "Warung Pintar Mock + Foward Proxy API",
-  "main": "index.js",
-  "scripts": {
-    "dev": "CONFIG_PATH=example/.warlock.yaml nodemon src/index.js",
-    "test": "mocha src/**/*.test.js"
-  },
   "keywords": [
     "mock",
     "api",
@@ -15,6 +10,32 @@
   ],
   "author": "wartech",
   "license": "ISC",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "typings": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "nodemon --watch src --exec yarn build -e ts",
+    "start:example": "CONFIG_PATH=example/.warlock.yaml nodemon src/index.js",
+    "format": "prettier",
+    "lint": "eslint",
+    "prebuild": "rimraf dist",
+    "build": "concurrently yarn:build:*",
+    "build:esm": "cross-env BABEL_ENV=esm babel src --extensions .ts -d dist/esm --source-maps",
+    "build:cjs": "cross-env BABEL_ENV=cjs babel src --extensions .ts -d dist/cjs --source-maps",
+    "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
+    "test": "concurrently yarn:test:*",
+    "test:unit": "mocha src/**/*.test.js",
+    "test:type": "tsc --noEmit",
+    "test:lint": "yarn lint src/**/*.ts",
+    "test:format": "yarn format src/**/*.ts",
+    "postinstall": "is-ci || husky install .config/husky",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
+  },
   "dependencies": {
     "@graphql-mesh/cli": "^0.11.12",
     "@graphql-mesh/graphql": "^0.13.13",
@@ -34,8 +55,27 @@
     "ramda": "^0.27.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "11.0.0",
+    "@commitlint/config-conventional": "11.0.0",
+    "@types/faker": "5.1.6",
+    "@types/jest": "^26.0.20",
+    "@types/js-yaml": "4.0.0",
+    "@types/koa": "2.11.8",
+    "@types/koa-bodyparser": "4.3.0",
+    "@types/koa-router": "7.4.1",
+    "@types/node": "^14.14.28",
+    "@types/ramda": "0.27.38",
+    "@warungpintar/warpin-scripts": "*",
+    "cross-env": "7.0.3",
+    "husky": "5.0.9",
+    "is-ci": "3.0.0",
+    "lint-staged": "10.5.4",
     "mocha": "^8.3.0",
     "nodemon": "^2.0.7",
+    "pinst": "2.1.4",
     "should": "^13.2.3"
+  },
+  "resolutions": {
+    "typescript": "4.1.5"
   }
 }
