@@ -1,36 +1,61 @@
-sources:
-  - name: Poke API
-    source: https://pokeapi.co
-    handler: rest
-    transforms:
-      /api/v2/pokemon: 
-        get:
-          - field: root.results.[].name
-            type: string
-            resolvers:
-              - faker: name.firstName
-      /api/v3/pokemon:
-        get:
-          - field: 'root'
-            type: object
-            resolvers:
-              - json: ./resolvers/pokemon-v3.json
-              - faker: name.firstName
-              - path: ./resolvers/result-resolvers.js
-          - field: root.results.[].origin
-            type: string
-            resolvers:
-              - faker: address.country
-  - name: Wiki API
-    source: https://wikimedia.org
-    handler: rest
-    transforms:
-      /api/rest_v1/feed/availability:
-        get:
-          - field: 'picture_of_the_day'
-            type: string
-            resolvers:
-              - path: ./resolvers/result-resolvers.js
-  - name: Countries API
-    source: https://countries-274616.ew.r.appspot.com
-    handler: graphql
+rest:
+  # mockTools -> Origin -> Responses -> field(transform) -> app client
+  #
+  sources:
+    - name: Poke API
+      origin: https://pokeapi.co
+      transforms:
+        # (origin) => transform by field(faker) => new Responses(origin+faker_field)
+        /api/v2/pokemon:
+          get:
+            - field: root.results.[].name
+              type: string
+              resolvers:
+                - faker: name.firstName
+        /api/v3/pokemon:
+          get:
+            - field: "root"
+              type: object
+              resolvers:
+                # compose(json,faker,path,(origin)) => new Responses
+                - json: ./resolvers/pokemon-v3.json
+                - faker: name.firstName
+                - path: ./resolvers/result-resolvers.js
+            - field: root.results.[].origin
+              type: string
+              resolvers:
+                - faker: address.country
+    - name: Wiki API
+      origin: https://wikimedia.org
+      transforms:
+        /api/rest_v1/feed/availability:
+          get:
+            - field: "picture_of_the_day"
+              type: string
+              resolvers:
+                - path: ./resolvers/result-resolvers.js
+graphql:
+  sources:
+    - name: UploadFiles
+      handler:
+        graphql:
+          endpoint: http://localhost:3001/graphql
+          multipart: true
+    - name: ResizeImages
+      handler:
+        graphql:
+          endpoint: http://localhost:3002/graphql
+  additionalTypeDefs: |
+    extend type File {
+      thumbnailImage(width: Int, height: Int): String
+    }
+  additionalResolvers:
+    - type: File
+      field: thumbnailImage
+      requiredSelectionSet: "{ base64 }"
+      targetSource: ResizeImages
+      targetMethod: resizeImage
+      args:
+        image: "{root.base64}"
+        width: "{args.width}"
+        height: "{args.height}"
