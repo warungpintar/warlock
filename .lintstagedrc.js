@@ -1,8 +1,12 @@
 module.exports = {
+  'src/types/config.schema.json': [
+    'json2ts -o src/types/config.ts',
+    'git add src/types/config.ts ',
+  ],
   'src/**/*.{js?(x),ts?(x)}': [
     'eslint --fix',
     'prettier --write',
-    // @TODO: {jest} 'yarn test --findRelatedTests',
+    `cross-env NODE_ENV=test jest --bail --findRelatedTests`,
   ],
-  '**/*.ts?(x)': () => 'tsc -p tsconfig.json --noEmit',
+  'src/**/*.ts?(x)': () => 'tsc -p tsconfig.json --noEmit',
 };
