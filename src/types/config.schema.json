@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Config",
+  "description": "Warlock Config Schema",
+  "definitions": {
+    "Source": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of your services or Remote API",
+          "type": "string"
+        },
+        "origin": {
+          "description": "the origin server url, for example: https://warunpintar.co",
+          "type": "string",
+          "format": "uri"
+        },
+        "transforms": {
+          "description": "Responses API Transform, for example: /api/v1 with value type is Transform",
+          "type": "object",
+          "patternProperties": {
+            "^/": {
+              "$ref": "#/definitions/Transform"
+            }
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": ["name", "origin"]
+    },
+    "Transform": {
+      "description": "field list transform by http method",
+      "type": "object",
+      "properties": {
+        "get": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "post": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "put": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "patch": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "delete": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Resolver": {
+      "type": "object",
+      "properties": {
+        "json": {
+          "description": "resolve from json or inline-json",
+          "type": "string"
+        },
+        "faker": {
+          "description": "resolve from faker, for example: faker.firstName",
+          "type": "string"
+        },
+        "path": {
+          "description": "resolve from some file by path, for example: ./mock/resolver.js",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Field": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "description": "field name want to transform, (default: root) for example: root.[].name",
+          "type": "string"
+        },
+        "type": {
+          "description": "the field type, for example: object | string | number",
+          "type": "string"
+        },
+        "resolvers": {
+          "description": "field name want to transform, (default: root) for example: root.[].name",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Resolver"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "type": "object",
+  "properties": {
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Source"
+      }
+    }
+  },
+  "additionalProperties": false
+}
