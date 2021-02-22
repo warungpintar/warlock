@@ -26,9 +26,9 @@
     "build": "concurrently yarn:build:*",
     "build:esm": "cross-env BABEL_ENV=esm babel src --extensions .ts -d dist/esm --source-maps",
     "build:cjs": "cross-env BABEL_ENV=cjs babel src --extensions .ts -d dist/cjs --source-maps",
-    "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
+    "build_:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
     "test": "concurrently yarn:test:*",
-    "test:unit": "mocha src/**/*.test.js",
+    "test:unit": "jest",
     "test:type": "tsc --noEmit",
     "test:lint": "yarn lint src/**/*.ts",
     "test:format": "yarn format src/**/*.ts",
@@ -42,6 +42,7 @@
     "@graphql-mesh/openapi": "^0.10.6",
     "axios": "^0.21.1",
     "faker": "^5.4.0",
+    "fp-ts": "^2.9.5",
     "graphql": "^15.4.0",
     "js-yaml": "^4.0.0",
     "koa": "2.8.1",
@@ -55,6 +56,9 @@
     "ramda": "^0.27.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.17",
+    "@babel/preset-env": "^7.12.17",
+    "@babel/preset-typescript": "^7.12.17",
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "11.0.0",
     "@types/faker": "5.1.6",
@@ -66,14 +70,18 @@
     "@types/node": "^14.14.28",
     "@types/ramda": "0.27.38",
     "@warungpintar/warpin-scripts": "*",
+    "babel-jest": "^26.6.3",
+    "concurrently": "^6.0.0",
     "cross-env": "7.0.3",
     "husky": "5.0.9",
     "is-ci": "3.0.0",
+    "jest": "^26.6.3",
     "lint-staged": "10.5.4",
     "mocha": "^8.3.0",
     "nodemon": "^2.0.7",
     "pinst": "2.1.4",
-    "should": "^13.2.3"
+    "should": "^13.2.3",
+    "ts-jest": "^26.5.1"
   },
   "resolutions": {
     "typescript": "4.1.5"

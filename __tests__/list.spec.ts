@@ -1,4 +1,4 @@
-import * as list from './list';
+import * as list from '../src/utils/list';
 import should from 'should';
 
 const cases = [

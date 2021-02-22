@@ -1,4 +1,4 @@
-import * as configTransform from './configTransform';
+import * as configTransform from '../src/utils/configTransform';
 import should from 'should';
 
 const originalConfig = {

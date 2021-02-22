@@ -1,14 +1,25 @@
 {
   "extends": "@warungpintar/warpin-scripts/config/tsconfig.json",
+  "compilerOptions": {
+    "strict": false
+  },
   "typeRoots": [
-      "./types",
-      "./node_modules/@types"
+    "./types",
+    "./node_modules/@types"
   ],
   "include": [
-    "src"
+    "src",
+    "__tests__/"
   ],
   "exclude": [
     "node_modules",
     "typings"
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "resolveJsonModule": true,
+      "noImplicitAny": false
+    }
+  }
 }
