@@ -22,7 +22,7 @@ rest:
                 - path: ./resolvers/result-resolvers.js
         /api/v3/pokemon:
           get:
-            - field: 'root'
+            - field: root
               resolvers:
                 - json: ./resolvers/pokemonv3.json
     - name: Wiki API
@@ -30,8 +30,7 @@ rest:
       transforms:
         /api/rest_v1/feed/availability:
           get:
-            - field: 'picture_of_the_day'
-              type: string
+            - field: "picture_of_the_day"
               resolvers:
                 - path: ./resolvers/result-resolvers.js
 graphql:
@@ -52,10 +51,10 @@ graphql:
   additionalResolvers:
     - type: File
       field: thumbnailImage
-      requiredSelectionSet: '{ base64 }'
+      requiredSelectionSet: "{ base64 }"
       targetSource: ResizeImages
       targetMethod: resizeImage
       args:
-        image: '{root.base64}'
-        width: '{args.width}'
-        height: '{args.height}'
+        image: "{root.base64}"
+        width: "{args.width}"
+        height: "{args.height}"
