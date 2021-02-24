@@ -1,10 +1,8 @@
-import R from 'ramda';
-
-const log = R.tap((x) => {
+export const log = (x) => {
   console.log(x);
   return x;
-});
+};
 
-export default {
-  log,
+export const toString = (x) => {
+  return x.toString();
 };
