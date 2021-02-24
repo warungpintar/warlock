@@ -1,5 +1,5 @@
-const resolver = (parent, ctx) => {
-  return parent.toLowerCase();
+const resolver = (parent) => {
+  return parent.toUpperCase();
 };
 
 module.exports = resolver;

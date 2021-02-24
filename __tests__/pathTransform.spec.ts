@@ -1,4 +1,4 @@
-import { pathTransform } from '../src/libs/pathTransform';
+import { pathTransform } from '../src/utils/pathTransform';
 
 describe('path transform', () => {
   const data = {

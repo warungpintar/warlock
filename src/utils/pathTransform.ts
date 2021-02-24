@@ -98,6 +98,7 @@ export function pathTransform(
   config: KeysToCamelConfigType | null = null,
   path = 'root',
 ): any {
+  if (!input) return input;
   const modifier = config?.modifier ?? {};
 
   // if included array path like "root.items.[0].isMentee.[1].age"

@@ -1,7 +1,8 @@
 {
   "extends": "@warungpintar/warpin-scripts/config/tsconfig.json",
   "compilerOptions": {
-    "strict": false
+    "strict": false,
+    "jsx": "react"
   },
   "typeRoots": [
     "./types",
@@ -19,7 +20,9 @@
     "compilerOptions": {
       "module": "CommonJS",
       "resolveJsonModule": true,
-      "noImplicitAny": false
+      "noImplicitAny": false,
+      "jsx": "react",
+      "target": "es5"
     }
   }
 }
