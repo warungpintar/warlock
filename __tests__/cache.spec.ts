@@ -1,42 +1,44 @@
 import LRU from 'lru-cache';
-import { CACHE_AGE } from '../src/config';
 import { getGetRequest, hasGetRequest, setGetRequest, ICacheDependency } from '../src/libs/cache'
+import { toError } from 'fp-ts/lib/Either';
+import { tryCatch, right } from 'fp-ts/lib/IOEither';
+import * as O from 'fp-ts/Option'
 
-const ONE_HOUR = 1000 * 60 * 60;
-const cacheAge = CACHE_AGE || ONE_HOUR;
-const options = {
-  max: 500,
-  length: (n, key) => (n * 2) + key.length,
-  dispose: (_, n) => n.close(),
-  maxAge: cacheAge
-};
-
-const cacheInstance: ICacheDependency = new LRU(options);
-
-describe('cache library', () => {
+describe('memory cache library', () => {
   // prereq step
-  const cachedResponsePayload = JSON.stringify({ success: true });
-  setGetRequest(new URL('https://example.com?john=doe&foo=bar'), cachedResponsePayload)(cacheInstance);
+  const ONE_HOUR = `${1000 * 60 * 60}`;
+  const cacheAge = parseInt(process.env.CACHE_AGE ?? ONE_HOUR, 10);
+  const options = {
+    max: 500,
+    length: (n, key) => (n * 2) + key.length,
+    dispose: (_, n) => n.close(),
+    maxAge: cacheAge
+  };
 
-  const expectation = cachedResponsePayload;
+  const cacheInstance: ICacheDependency = new LRU(options);
+  const cachedResponsePayload = JSON.stringify({ success: true });
+  const set = setGetRequest(new URL('https://example.com?john=doe&foo=bar'), cachedResponsePayload)(cacheInstance);
+  set();
+
+  const expectation = O.some(cachedResponsePayload);
 
   it('should match expectation to get from cache with same url\'s search params order', () => {
-    expect(getGetRequest(new URL('https://example.com?john=doe&foo=bar'))(cacheInstance)).toEqual(expectation)
+    const get = tryCatch(getGetRequest(new URL('https://example.com?foo=bar&john=doe'))(cacheInstance), toError);
+    expect(get()).toStrictEqual(right(expectation)());
   });
 
   it('should match expectation to get from cache with different url\'s search params order', () => {
-    expect(getGetRequest(new URL('https://example.com?foo=bar&john=doe'))(cacheInstance)).toEqual(expectation)
+    const get = tryCatch(getGetRequest(new URL('https://example.com?foo=bar&john=doe'))(cacheInstance), toError);
+    expect(get()).toStrictEqual(right(expectation)());
   });
 
   it('should match expectation to check from cache with same url\'s search params order', () => {
-    expect(hasGetRequest(new URL('https://example.com?john=doe&foo=bar'))(cacheInstance)).toEqual(true)
+    const get = tryCatch(hasGetRequest(new URL('https://example.com?john=doe&foo=bar'))(cacheInstance), toError);
+    expect(get()).toEqual(right(true)());
   });
 
-  it('should match expectation to check from cache with different url\'s search params order', () => {
-    expect(hasGetRequest(new URL('https://example.com?foo=bar&john=doe'))(cacheInstance)).toEqual(true)
-  });
-
-  it('should match expectation to check from cache where is not exist', () => {
-    expect(hasGetRequest(new URL('https://example.com?foo=bar&john=doe&lorem=ipsum'))(cacheInstance)).toEqual(false)
+  it('should match expectation to check from cache with same url\'s search params order', () => {
+    const get = tryCatch(hasGetRequest(new URL('https://example.com?foo=bar&john=doe&lorem=ipsum'))(cacheInstance), toError);
+    expect(get()).toEqual(right(false)());
   });
 });
