@@ -5,6 +5,9 @@ const BASE = require('@warungpintar/warpin-scripts/config/babel.config');
 
 module.exports = function(api) {
   const base = BASE(api);
+  const targets = {
+    esmodules: isESM ? true : undefined,
+  };
   const overrides = [
     {
       presets: [
@@ -14,11 +17,13 @@ module.exports = function(api) {
             loose: true,
             modules: isCommonJS ? 'commonjs' : false,
             targets: {
-              esmodules: isESM ? true : undefined,
+              ...targets,
+              ...(isCommonJS ? { node: '10' } : {}),
             },
           },
         ],
       ],
+      plugins: [['inline-json-import', {}]],
     },
   ];
   const ignore = [

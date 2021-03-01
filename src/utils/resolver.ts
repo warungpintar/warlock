@@ -1,5 +1,6 @@
 import * as O from 'fp-ts/Option';
 import { findFirst, reduce } from 'fp-ts/Array';
+import { Config } from '../types/config-combine';
 import {
   fakerResolver,
   jsonResolver,
@@ -74,4 +75,27 @@ export const transformFieldHandler = (context: Context) => (
         resolverMapper(context, parent)(next.resolvers),
     };
   })(handlers);
+};
+
+export const getPatResolvers = (config: Config) => {
+  return config.rest?.sources
+    ?.map((source) =>
+      Object.values(source.transforms ?? {}).reduce((prev, next) => {
+        const resolvers = Object.values(next)
+          .flat()
+          .map((field) => field.resolvers)
+          .flat()
+          .map((resolver) => resolver?.path)
+          .filter(Boolean);
+        return [...prev, ...resolvers];
+      }, []),
+    )
+    .flat()
+    .reduce((prev, next) => {
+      if (prev.includes(next)) {
+        return prev;
+      }
+
+      return [...prev, next];
+    }, []);
 };

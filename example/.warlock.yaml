@@ -23,16 +23,8 @@ rest:
         /api/v3/pokemon:
           get:
             - field: 'root'
-              type: object
               resolvers:
-                # compose(json,faker,path,(origin)) => new Responses
-                - json: ./resolvers/pokemon-v3.json
-                - faker: name.firstName
-                - path: ./resolvers/result-resolvers.js
-            - field: root.results.[].origin
-              type: string
-              resolvers:
-                - faker: address.country
+                - json: ./resolvers/pokemonv3.json
     - name: Wiki API
       origin: https://wikimedia.org
       transforms:

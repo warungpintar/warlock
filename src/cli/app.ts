@@ -1,11 +1,11 @@
-import path from 'path';
 import { program } from 'commander';
-import { pipe } from 'fp-ts/function';
-import { fold } from 'fp-ts/Either';
+import ora from 'ora';
+import runServer from './runServer';
 
 import packageJson from '../../package.json';
-import { run } from '../express';
-import { getConfig } from '../config';
+
+const startSpinner = ora('Starting WarLock...');
+startSpinner.start();
 
 program.name(packageJson.name).version(packageJson.version);
 
@@ -15,19 +15,8 @@ program
   .option('-c, --config <config>', 'specify config path')
   .option('-p, --port <port>', 'specify port')
   .action(({ config, port }) => {
-    const filePath = path.join(process.cwd(), config ?? '.warlock.yaml');
-
-    pipe(
-      getConfig(filePath),
-      fold(
-        (e) => {
-          console.error(e);
-        },
-        (c) => {
-          run({ port: port ?? 4000, config: c });
-        },
-      ),
-    );
+    runServer(config, port ?? 4000);
   });
 
 program.parse(process.argv);
+startSpinner.succeed();
