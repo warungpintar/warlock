@@ -1,4 +1,5 @@
 import LRU from 'lru-cache';
+import LMDB from '../src/libs/lmdb';
 import { getGetRequest, hasGetRequest, setGetRequest, ICacheDependency } from '../src/libs/cache';
 import { pipe, flow } from 'fp-ts/function';
 import * as E from 'fp-ts/lib/Either';
@@ -57,6 +58,49 @@ describe('memory cache library', () => {
 
   it('should match expectation to check from cache with same url\'s search params order', () => {
     const get = IO.tryCatch(hasGetRequest(new URL('https://example.com?foo=bar&john=doe&lorem=ipsum'))(cacheInstance), E.toError);
+    expect(get()).toEqual(IO.right(false)());
+  });
+});
+
+describe('lmdb cache library', () => {
+  const lmdbInstance: ICacheDependency = new LMDB();
+  const cachedResponsePayload = JSON.stringify({ success: true });
+  const set = setGetRequest(new URL('https://example.com?john=doe&foo=bar'), cachedResponsePayload)(lmdbInstance);
+  set();
+
+  const expectation = O.some(cachedResponsePayload);
+
+  it('should match expectation to get from cache with same url\'s search params order', () => {
+    const get = IO.tryCatch(getGetRequest(new URL('https://example.com?foo=bar&john=doe'))(lmdbInstance), E.toError);
+    expect(get()).toStrictEqual(IO.right(expectation)());
+  });
+
+  it('should match expectation to get from cache with same url\'s search params order and get the object prop', () => {
+    const transformToIoEither = a => IO.ioEither.of(a);
+
+    const getSuccess = pipe(
+      IO.tryCatch(getGetRequest(new URL('https://example.com?foo=bar&john=doe'))(lmdbInstance), E.toError),
+      IO.chain(flow(
+        O.map(strToJson),
+        O.chain(safeGet('success')),
+        transformToIoEither
+      ))
+    );
+    expect(getSuccess()).toStrictEqual(IO.right(O.some(true))());
+  });
+
+  it('should match expectation to get from cache with different url\'s search params order', () => {
+    const get = IO.tryCatch(getGetRequest(new URL('https://example.com?foo=bar&john=doe'))(lmdbInstance), E.toError);
+    expect(get()).toStrictEqual(IO.right(expectation)());
+  });
+
+  it('should match expectation to check from cache with same url\'s search params order', () => {
+    const get = IO.tryCatch(hasGetRequest(new URL('https://example.com?john=doe&foo=bar'))(lmdbInstance), E.toError);
+    expect(get()).toEqual(IO.right(true)());
+  });
+
+  it('should match expectation to check from cache with same url\'s search params order', () => {
+    const get = IO.tryCatch(hasGetRequest(new URL('https://example.com?foo=bar&john=doe&lorem=ipsum'))(lmdbInstance), E.toError);
     expect(get()).toEqual(IO.right(false)());
   });
 });
