@@ -1,7 +1,11 @@
-/* eslint-disable */
 import lmdb from 'node-lmdb';
 import path from 'path';
 
+import { ICacheDependency } from './cache';
+
+export interface ILMDBCacheDependency extends ICacheDependency {
+  close: () => void;
+}
 export default class LMDB {
   'env': any;
   'dbi': any;
@@ -12,7 +16,7 @@ export default class LMDB {
 
     this.env.open({
       path: path.join(__dirname, '../../.cache'),
-      maxDbs: 1,
+      maxDbs: 1, // set as single DB
     });
 
     this.dbi = this.env.openDbi({
@@ -32,7 +36,6 @@ export default class LMDB {
     const txn = this.env.beginTxn();
     txn.putString(this.dbi, key, value);
     txn.commit();
-
     return true;
   }
 
@@ -41,5 +44,10 @@ export default class LMDB {
     const data: string = txn.getString(this.dbi, key);
     txn.commit();
     return !!data;
+  }
+
+  public close() {
+    this.dbi.close();
+    this.env.close();
   }
 }

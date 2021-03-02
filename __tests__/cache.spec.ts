@@ -1,5 +1,5 @@
 import LRU from 'lru-cache';
-import LMDB from '../src/libs/lmdb';
+import LMDB, { ILMDBCacheDependency } from '../src/libs/lmdb';
 import { getGetRequest, hasGetRequest, setGetRequest, ICacheDependency } from '../src/libs/cache';
 import { pipe, flow } from 'fp-ts/function';
 import * as E from 'fp-ts/lib/Either';
@@ -63,7 +63,7 @@ describe('memory cache library', () => {
 });
 
 describe('lmdb cache library', () => {
-  const lmdbInstance: ICacheDependency = new LMDB();
+  const lmdbInstance: ILMDBCacheDependency = new LMDB();
   const cachedResponsePayload = JSON.stringify({ success: true });
   const set = setGetRequest(new URL('https://example.com?john=doe&foo=bar'), cachedResponsePayload)(lmdbInstance);
   set();
