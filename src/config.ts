@@ -3,7 +3,7 @@ import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as E from 'fp-ts/lib/Either';
 import * as IOE from 'fp-ts/lib/IOEither';
-import { pipe } from 'fp-ts/lib/function';
+import * as F from 'fp-ts/lib/function';
 import * as T from './types';
 /**
  * TODO : make it utils for this project
@@ -11,21 +11,22 @@ import * as T from './types';
 const readFileSync = (file: string): IOE.IOEither<Error, string> =>
   IOE.tryCatch(() => fs.readFileSync(file, 'utf8'), E.toError);
 
+const emptyConfig: T.Config = {
+  rest: undefined,
+  graphql: undefined,
+};
+
 const yamlLoad = (
   file: string,
   opts?: yaml.LoadOptions,
 ): IOE.IOEither<Error, T.Config> =>
   IOE.tryCatch(() => {
-    const _default = {
-      rest: undefined,
-      graphql: undefined,
-    };
     const loaded = yaml.load(file, opts);
     switch (typeof loaded) {
       case 'object':
-        return loaded ?? _default;
+        return loaded ?? emptyConfig;
       default:
-        return _default;
+        return emptyConfig;
     }
   }, E.toError);
 
@@ -40,7 +41,7 @@ const yamlLoad = (
  * ```
  */
 export const getConfig = (file: string) => {
-  const p = pipe(
+  const p = F.pipe(
     file,
     readFileSync,
     IOE.bimap(E.toError, yamlLoad),
@@ -48,4 +49,12 @@ export const getConfig = (file: string) => {
   );
 
   return p();
+};
+
+export const getConfigWithDefault = (file: string) => {
+  return F.pipe(
+    file,
+    getConfig,
+    E.getOrElseW(() => emptyConfig),
+  );
 };
