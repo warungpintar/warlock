@@ -46,7 +46,7 @@ export default class LMDB {
     return !!data;
   }
 
-  public close() {
+  public close(): void {
     this.dbi.close();
     this.env.close();
   }
