@@ -29,16 +29,14 @@ export const run = ({ port, config }: IRun) => {
 
 const cleanup = () => {
   console.info('shutdown signal is received');
-  console.info('will shutdown in 5s');
+  console.info('will shutdown in 250ms');
 
   setTimeout(() => {
     console.info('shutting down...');
     lmdbInstance.close();
     process.exit();
-  }, 5000);
+  }, 250);
 };
 
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
-
-run({ port: 3000, config: {} });
