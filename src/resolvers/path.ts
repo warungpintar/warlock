@@ -11,7 +11,10 @@ export type Context = {
 
 export const pathResolver = (filePath: string, context: Context) =>
   flow((data: any) => {
-    const mockFunction = require(path.join(PATH_RESOLVER_DIRECTORI, filePath));
+    const functionPath = path.join(PATH_RESOLVER_DIRECTORI, filePath);
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete require.cache[functionPath];
+    const mockFunction = require(functionPath);
 
     if (typeof mockFunction === 'function') {
       return mockFunction(data, context);
