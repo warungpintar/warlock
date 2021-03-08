@@ -6,8 +6,8 @@ import * as E from 'fp-ts/lib/Either';
 import * as IO from 'fp-ts/lib/IOEither';
 import * as O from 'fp-ts/Option';
 
-import { safeGet } from '../src/utils/object'
-import { strToJson } from '../src/utils/generic'
+import { safeGet } from '../src/utils/object';
+import { strToJson } from '../src/utils/generic';
 
 describe('memory cache library', () => {
   // prereq step
@@ -15,9 +15,9 @@ describe('memory cache library', () => {
   const cacheAge = parseInt(process.env.CACHE_AGE ?? ONE_HOUR, 10);
   const options = {
     max: 500,
-    length: (n, key) => (n * 2) + key.length,
+    length: (n, key) => (n * 2) + (+key.length),
     dispose: (_, n) => n.close(),
-    maxAge: cacheAge
+    maxAge: cacheAge,
   };
 
   const cacheInstance: ICacheDependency = new LRU(options);
@@ -40,8 +40,8 @@ describe('memory cache library', () => {
       IO.chain(flow(
         O.map(strToJson),
         O.chain(safeGet('success')),
-        transformToIoEither
-      ))
+        transformToIoEither,
+      )),
     );
     expect(getSuccess()).toStrictEqual(IO.right(O.some(true))());
   });
@@ -83,8 +83,8 @@ describe('lmdb cache library', () => {
       IO.chain(flow(
         O.map(strToJson),
         O.chain(safeGet('success')),
-        transformToIoEither
-      ))
+        transformToIoEither,
+      )),
     );
     expect(getSuccess()).toStrictEqual(IO.right(O.some(true))());
   });
