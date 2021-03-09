@@ -1,12 +1,10 @@
-import md5 from 'md5';
-// https://stackoverflow.com/questions/2722943/is-calculating-an-md5-hash-less-cpu-intensive-than-sha-family-functions
 import { Reader } from 'fp-ts/lib/Reader';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { IO } from 'fp-ts/lib/IO';
 import { fromNullable, Option } from 'fp-ts/lib/Option';
 
 import { sortURLSearchParams } from '../utils/url';
-import { toString } from '../utils/generic';
+import { toString, hashStr } from '../utils/generic';
 
 // @TODO Cache suppose to be modular, where we can select whether the cache will be stored on the memory, db, or file
 // type CacheOption = {
@@ -21,8 +19,6 @@ export interface ICacheDependency {
   get: (key: string) => string;
   set: (key: string, value: string) => boolean;
 }
-
-export const hashKey = (payload: string): string => md5(payload);
 
 export const getItem = (
   key: string,
@@ -40,14 +36,14 @@ export const setItem = (
   deps.set(key, value);
 
 export const getGetRequest = (url: URL) =>
-  pipe(sortURLSearchParams(url), toString, hashKey, (key) => (deps) =>
+  pipe(sortURLSearchParams(url), toString, hashStr, (key) => (deps) =>
     getItem(key)(deps),
   );
 
 export const hasGetRequest = (url: URL) =>
-  pipe(sortURLSearchParams(url), toString, hashKey, hasItem);
+  pipe(sortURLSearchParams(url), toString, hashStr, hasItem);
 
 export const setGetRequest = (url: URL, responsePayload: string) =>
-  pipe(sortURLSearchParams(url), toString, hashKey, (key) => (deps) =>
+  pipe(sortURLSearchParams(url), toString, hashStr, (key) => (deps) =>
     setItem(key, responsePayload)(deps),
   );

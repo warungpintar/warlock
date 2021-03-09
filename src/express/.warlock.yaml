@@ -11,7 +11,7 @@ sources:
               - faker: name.firstName
       /api/v3/pokemon:
         get:
-          - field: 'root'
+          - field: "root"
             type: object
             resolvers:
               - json: ./resolvers/pokemon-v3.json
@@ -27,7 +27,7 @@ sources:
     transforms:
       /api/rest_v1/feed/availability:
         get:
-          - field: 'picture_of_the_day'
+          - field: "picture_of_the_day"
             type: string
             resolvers:
               - path: ./resolvers/result-resolvers.js

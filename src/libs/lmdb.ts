@@ -3,6 +3,10 @@ import path from 'path';
 
 import { ICacheDependency } from './cache';
 
+interface LMDBOptions {
+  path: string;
+  maxDbs: number;
+}
 export interface ILMDBCacheDependency extends ICacheDependency {
   close: () => void;
 }
@@ -11,13 +15,15 @@ export default class LMDB {
   'dbi': any;
   'txn': any;
 
-  constructor() {
+  constructor(overrideOpts?: LMDBOptions) {
     this.env = new lmdb.Env();
-
-    this.env.open({
+    const defaultOpts = {
       path: path.join(__dirname, '../../.cache'),
       maxDbs: 1, // set as single DB
-    });
+    };
+    const theOpts = Object.assign(defaultOpts, overrideOpts);
+
+    this.env.open(theOpts);
 
     this.dbi = this.env.openDbi({
       name: 'response',

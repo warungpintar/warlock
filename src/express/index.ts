@@ -1,3 +1,8 @@
+import os from 'os';
+import { pipe } from 'fp-ts/function';
+import * as E from 'fp-ts/Either';
+import * as O from 'fp-ts/Option';
+
 import app from './app';
 import coreMiddleware from './coreMiddleware';
 import resolverMiddleware from './resolverMiddleware';
@@ -5,8 +10,23 @@ import { Config } from '../types';
 import { logger } from '../logger';
 
 import LMDB, { ILMDBCacheDependency } from '../libs/lmdb';
+import { buildDirPath, createDirIfNotExist } from '../utils/fs';
+import { WARLOCK_CACHE_DIR_NAME } from '../constant';
 
-const lmdbInstance: ILMDBCacheDependency = new LMDB();
+const CACHE_BASE_PATH = os.homedir();
+const concatCachePathWith = buildDirPath(CACHE_BASE_PATH);
+const createCacheDir = createDirIfNotExist(
+  concatCachePathWith(WARLOCK_CACHE_DIR_NAME),
+);
+
+const lmdbOpts = pipe(
+  createCacheDir(),
+  E.map((x) => O.some({ path: x })),
+  E.getOrElse(() => O.none),
+  O.toUndefined,
+);
+
+const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
 
 app.use(coreMiddleware);
 app.use(resolverMiddleware);
