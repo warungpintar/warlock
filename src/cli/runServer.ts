@@ -2,7 +2,6 @@ import * as esbuild from 'esbuild';
 import path from 'path';
 import { pipe } from 'fp-ts/function';
 import { map, mapLeft } from 'fp-ts/Either';
-import ora from 'ora';
 
 import { run } from '../express';
 import { getConfig } from '../config';
@@ -10,9 +9,6 @@ import { fileWatcher } from './watcher';
 import { logger } from '../logger';
 import { getPatResolvers } from '../utils';
 import { PATH_RESOLVER_DIRECTORI } from '../constant';
-
-const resolverBuilderSpinner = ora('building resolvers');
-const restartSpinner = ora('restaring server');
 
 const runServer = (config: string, port: number) => {
   const filePath = path.join(process.cwd(), config ?? '.warlock.yaml');
@@ -22,7 +18,6 @@ const runServer = (config: string, port: number) => {
     map((c) => {
       const pathResolvers: string[] = getPatResolvers(c);
 
-      resolverBuilderSpinner.start();
       console.time(`building ${pathResolvers.length} resolvers`);
       pathResolvers.forEach((resolverPath) => {
         esbuild.buildSync({
@@ -34,7 +29,7 @@ const runServer = (config: string, port: number) => {
           outfile: path.join(PATH_RESOLVER_DIRECTORI, resolverPath),
         });
       });
-      resolverBuilderSpinner.succeed();
+      logger.info('building resolvers');
       console.timeEnd(`building ${pathResolvers.length} resolvers`);
 
       const server = run({ port, config: c });
@@ -42,7 +37,6 @@ const runServer = (config: string, port: number) => {
       // watch resolvers
       pathResolvers.forEach((resolverPath) => {
         fileWatcher(() => {
-          resolverBuilderSpinner.start();
           esbuild.buildSync({
             entryPoints: [path.join(process.cwd(), resolverPath)],
             bundle: true,
@@ -51,16 +45,15 @@ const runServer = (config: string, port: number) => {
             format: 'cjs',
             outfile: path.join(PATH_RESOLVER_DIRECTORI, resolverPath),
           });
-          resolverBuilderSpinner.succeed();
+          logger.info('restaring server');
         })(path.join(process.cwd(), resolverPath));
       });
 
       // watch config
       fileWatcher(() => {
-        restartSpinner.start();
         server.close(() => {
           runServer(config, port);
-          restartSpinner.succeed();
+          logger.info('restaring server');
         });
       })(filePath);
     }),

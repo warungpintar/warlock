@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import axios, { Method } from 'axios';
+import { debugable } from '../logger';
 
 const igoredHeaders = ['transfer-encoding'];
 const instance = axios.create();
@@ -26,6 +27,7 @@ const coreMiddleware = (url: URL): RequestHandler => async (req, res, next) => {
       }
     });
 
+    debugable(req, proxyRes.data);
     res.status(proxyRes.status);
     res.locals = proxyRes.data;
   } catch {

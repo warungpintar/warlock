@@ -11,6 +11,7 @@ module.exports = function(api) {
   const overrides = [
     {
       presets: [
+        '@babel/preset-react',
         [
           '@babel/env',
           {
