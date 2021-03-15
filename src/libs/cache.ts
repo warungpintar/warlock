@@ -1,6 +1,7 @@
 import { Reader } from 'fp-ts/lib/Reader';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { IO } from 'fp-ts/lib/IO';
+import * as E from 'fp-ts/Either';
 import { fromNullable, Option } from 'fp-ts/lib/Option';
 
 import { sortURLSearchParams } from '../utils/url';
@@ -18,6 +19,11 @@ export interface ICacheDependency {
   has: (key: string) => boolean;
   get: (key: string) => string;
   set: (key: string, value: string) => boolean;
+}
+
+export interface ICache {
+  setItem: <T>(key: string, value: unknown) => E.Either<unknown, T>;
+  getItem: <T>(key: string) => E.Either<unknown, T>;
 }
 
 export const getItem = (

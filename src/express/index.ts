@@ -28,7 +28,7 @@ const lmdbOpts = pipe(
 
 const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
 
-app.use(coreMiddleware);
+app.use(coreMiddleware(lmdbInstance));
 app.use(resolverMiddleware);
 app.use((_, res) => {
   res.send(res.locals);

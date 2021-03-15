@@ -4,8 +4,11 @@ import restMiddleware from './restMiddleware';
 import graphqlMiddleware from './grapqhlMiddleware';
 
 import { parseUrl } from '../utils';
+import { ICacheDependency } from '../libs/cache';
 
-const coreMiddleware: RequestHandler = (...handler) => {
+const coreMiddleware = (cache: ICacheDependency): RequestHandler => (
+  ...handler
+) => {
   const [req, res] = handler;
   const maybeUrl = parseUrl(req.path.slice(1));
 
@@ -19,7 +22,7 @@ const coreMiddleware: RequestHandler = (...handler) => {
       if (url.pathname.includes('/graphql')) {
         graphqlMiddleware(url)(...handler);
       } else {
-        restMiddleware(url)(...handler);
+        restMiddleware(cache)(url)(...handler);
       }
     },
   )(maybeUrl);
