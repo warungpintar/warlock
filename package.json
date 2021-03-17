@@ -31,7 +31,7 @@
     "build:cjs": "cross-env BABEL_ENV=cjs babel src --extensions '.ts,.tsx' -d dist/cjs --source-maps",
     "build_:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
     "test": "concurrently yarn:test:*",
-    "test:unit": "jest",
+    "test:unit": "NODE_ENV=test jest",
     "test:type": "tsc --noEmit",
     "test:lint": "yarn lint src/**/*.ts",
     "test:format": "yarn format src/**/*.ts",
@@ -72,7 +72,8 @@
     "sort-keys": "^4.2.0",
     "sort-object": "^3.0.3",
     "sort-object-keys": "^1.1.3",
-    "ts-node": "^9.1.1"
+    "ts-node": "^9.1.1",
+    "url-pattern": "^1.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",
@@ -92,6 +93,7 @@
     "@types/lru-cache": "^5.1.0",
     "@types/md5": "^2.3.0",
     "@types/node": "^14.14.28",
+    "@types/supertest": "^2.0.10",
     "@warungpintar/warpin-scripts": "*",
     "babel-jest": "^26.6.3",
     "babel-plugin-inline-json-import": "^0.3.2",
@@ -109,6 +111,7 @@
     "ora": "5.3.0",
     "pinst": "2.1.4",
     "should": "^13.2.3",
+    "supertest": "^6.1.3",
     "ts-jest": "^26.5.1",
     "winston": "3.3.3"
   },

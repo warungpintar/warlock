@@ -10,7 +10,8 @@
   ],
   "include": [
     "src",
-    "__tests__/"
+    "__tests__/**/*.spec.ts",
+    "__tests__/fakerResolver01.ts"
   ],
   "exclude": [
     "node_modules",

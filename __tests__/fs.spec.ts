@@ -20,7 +20,6 @@ describe('fs utils buildDirPath with basePath', () => {
 });
 
 describe('fs utils createDir', () => {
-  console.log(process.cwd());
   // prerequisite step
   const basePath = process.cwd();
   const concatBasePathWith = buildDirPath(basePath);
@@ -40,6 +39,11 @@ describe('fs utils createDir', () => {
     const mkdirTest = createDir(dir);
     mkdirTest();
 
-    expect(E.fold((a: Error) => a.message, a => a)(mkdirTest())).toContain('file already exists');
+    expect(
+      E.fold(
+        (a: Error) => a.message,
+        (a) => a,
+      )(mkdirTest()),
+    ).toContain('file already exists');
   });
 });

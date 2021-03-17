@@ -8,7 +8,7 @@ import { getConfig } from '../config';
 import { fileWatcher } from './watcher';
 import { logger } from '../logger';
 import { getPatResolvers } from '../utils';
-import { PATH_RESOLVER_DIRECTORI } from '../constant';
+import { PATH_RESOLVER_DIR } from '../constant';
 
 const runServer = (config: string, port: number) => {
   const filePath = path.join(process.cwd(), config ?? '.warlock.yaml');
@@ -26,7 +26,7 @@ const runServer = (config: string, port: number) => {
           minify: true,
           platform: 'node',
           format: 'cjs',
-          outfile: path.join(PATH_RESOLVER_DIRECTORI, resolverPath),
+          outfile: path.join(PATH_RESOLVER_DIR, resolverPath),
         });
       });
       logger.info('building resolvers');
@@ -43,7 +43,7 @@ const runServer = (config: string, port: number) => {
             minify: true,
             platform: 'node',
             format: 'cjs',
-            outfile: path.join(PATH_RESOLVER_DIRECTORI, resolverPath),
+            outfile: path.join(PATH_RESOLVER_DIR, resolverPath),
           });
           logger.info('restaring server');
         })(path.join(process.cwd(), resolverPath));

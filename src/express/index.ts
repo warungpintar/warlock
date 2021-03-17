@@ -47,6 +47,11 @@ export const run = ({ port, config }: IRun) => {
   });
 };
 
+export const runForTest = (config: Config) => {
+  app.set('config', config);
+  return app;
+};
+
 const cleanup = () => {
   console.info('shutdown signal is received');
   console.info('will shutdown in 250ms');

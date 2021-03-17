@@ -1,5 +1,6 @@
 import * as O from 'fp-ts/Option';
 import { findFirst, reduce } from 'fp-ts/Array';
+import UrlPattern from 'url-pattern';
 import { Config } from '../types/config-combine';
 import {
   fakerResolver,
@@ -54,8 +55,18 @@ export const parseModule = (url: URL) => (config: Module[]) =>
   findFirst((module: Module) => module.origin === url.origin)(config);
 
 export const parseModulePathHandler = (url: URL) => (module: Module) => {
-  if (module.transforms[url.pathname]) {
-    return O.some(module.transforms[url.pathname]);
+  const pathHandlerKey = Object.keys(module.transforms).find((item) => {
+    if (item === url.pathname) return true;
+
+    const pattern = new UrlPattern(item);
+
+    if (pattern.match(url.pathname)) return true;
+
+    return false;
+  });
+
+  if (pathHandlerKey) {
+    return O.some(module.transforms[pathHandlerKey]);
   }
 
   return O.none;
