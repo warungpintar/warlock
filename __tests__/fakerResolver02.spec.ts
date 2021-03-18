@@ -48,8 +48,8 @@ describe('faker resolver 1', () => {
         if (err) return done(err);
 
         expect(res.headers['x-warlock-cache']).toBe('MISS');
-        expect(res?.body?.firmness?.name !== 'cheri').toBe(true);
-        expect(typeof res?.body?.firmness?.name).toBe('string');
+        expect(res?.body?.name !== 'cheri').toBe(true);
+        expect(typeof res?.body?.name).toBe('string');
         done();
       });
   });
@@ -62,8 +62,8 @@ describe('faker resolver 1', () => {
         if (err) return done(err);
 
         expect(res.headers['x-warlock-cache']).toBe('HIT');
-        expect(res?.body?.firmness?.name !== 'cheri').toBe(true);
-        expect(typeof res?.body?.firmness?.name).toBe('string');
+        expect(res?.body?.name !== 'cheri').toBe(true);
+        expect(typeof res?.body?.name).toBe('string');
         done();
       });
   });

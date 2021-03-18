@@ -31,6 +31,10 @@ const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
 app.use(coreMiddleware(lmdbInstance));
 app.use(resolverMiddleware);
 app.use((_, res) => {
+  if (typeof res.locals === 'object' && process.env.NODE_ENV !== 'test') {
+    res.set('Content-Type', 'text/json; charset=utf-8');
+  }
+
   res.send(res.locals);
 });
 

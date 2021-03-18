@@ -6,7 +6,12 @@ import { getCacheKey, encode, decode } from '../libs/cacheHttp';
 import { concatHeaders } from '../libs/http';
 import { logger, debugable } from '../logger';
 
-const instance = axios.create({ withCredentials: true });
+const instance = axios.create({
+  withCredentials: true,
+  // all http status code will handled as positive (then) instead of negative (catch)
+  // so the proxy can pipe all kind of response.
+  validateStatus: () => true,
+});
 
 const restMiddleware = (cache: ICacheDependency) => (
   url: URL,
@@ -24,7 +29,9 @@ const restMiddleware = (cache: ICacheDependency) => (
     }
   };
 
-  if (cache.has(cacheKey) && req.method.toLocaleLowerCase() === 'get') {
+  const isHasCache = cache.has(cacheKey);
+
+  if (isHasCache && req.method.toLocaleLowerCase() === 'get') {
     responseWithCache(cacheKey);
   }
 
@@ -41,15 +48,21 @@ const restMiddleware = (cache: ICacheDependency) => (
       data: req.body,
     })
     .then((proxyRes) => {
+      res.status(proxyRes.status);
       res.locals = proxyRes.data;
 
-      E.fold(
-        (e: Error) => {
-          logger.error('unable to encode the response for caching');
-          logger.error(JSON.stringify(e));
-        },
-        (data: string) => cache.set(cacheKey, data),
-      )(encode(res, proxyRes.headers));
+      // handle status between 200 and 300
+      if (proxyRes.status >= 200 && proxyRes.status < 300) {
+        E.fold(
+          (e: Error) => {
+            logger.error('unable to encode the response for caching');
+            logger.error(JSON.stringify(e));
+          },
+          (data: string) => cache.set(cacheKey, data),
+        )(encode(res, proxyRes.headers));
+      } else if (req.method.toLocaleLowerCase() !== 'get') {
+        responseWithCache(cacheKey);
+      }
 
       if (!res.headersSent) {
         debugable(req, { headers: proxyRes.headers, data: proxyRes.data });
@@ -60,6 +73,7 @@ const restMiddleware = (cache: ICacheDependency) => (
     })
     .catch((e) => {
       logger.error(JSON.stringify(e));
+
       if (req.method.toLocaleLowerCase() !== 'get') {
         responseWithCache(cacheKey);
       }

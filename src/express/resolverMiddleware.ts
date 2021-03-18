@@ -26,7 +26,10 @@ const resolverMiddleware: RequestHandler = (req, res, next) => {
       O.map(transformFieldHandler({ req, res })),
       O.fold(
         () => undefined,
-        (val) => val,
+        (val) => {
+          res.status(200);
+          return val;
+        },
       ),
     )(config?.rest?.sources);
 
