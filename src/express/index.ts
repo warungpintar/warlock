@@ -1,4 +1,6 @@
 import os from 'os';
+import bodyParser from 'body-parser';
+import multer from 'multer';
 import { pipe } from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
 import * as O from 'fp-ts/Option';
@@ -12,6 +14,8 @@ import { logger } from '../logger';
 import LMDB, { ILMDBCacheDependency } from '../libs/lmdb';
 import { buildDirPath, createDirIfNotExist } from '../utils/fs';
 import { WARLOCK_CACHE_DIR_NAME } from '../constant';
+
+const forms = multer();
 
 const CACHE_BASE_PATH = os.homedir();
 const concatCachePathWith = buildDirPath(CACHE_BASE_PATH);
@@ -28,6 +32,9 @@ const lmdbOpts = pipe(
 
 const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
 
+app.use(forms.any());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(coreMiddleware(lmdbInstance));
 app.use(resolverMiddleware);
 app.use((_, res) => {

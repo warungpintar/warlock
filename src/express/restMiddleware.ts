@@ -21,8 +21,8 @@ const restMiddleware = (cache: ICacheDependency) => (
     const cachedResponse = decode(cache.get(cacheKey));
     if (E.isRight(cachedResponse)) {
       const _cachedResponse = cachedResponse.right;
-      res.locals = _cachedResponse.data;
-      concatHeaders(_cachedResponse.headers)(res);
+      res.locals = _cachedResponse?.data;
+      concatHeaders(_cachedResponse?.headers ?? {})(res);
       res.set('x-warlock-cache', 'HIT');
       debugable(req, _cachedResponse);
       next();
@@ -30,7 +30,6 @@ const restMiddleware = (cache: ICacheDependency) => (
   };
 
   const isHasCache = cache.has(cacheKey);
-
   if (isHasCache && req.method.toLocaleLowerCase() === 'get') {
     responseWithCache(cacheKey);
   }
@@ -49,7 +48,7 @@ const restMiddleware = (cache: ICacheDependency) => (
     })
     .then((proxyRes) => {
       res.status(proxyRes.status);
-      res.locals = proxyRes.data;
+      res.locals = proxyRes?.data;
 
       // handle status between 200 and 300
       if (proxyRes.status >= 200 && proxyRes.status < 300) {
@@ -60,9 +59,15 @@ const restMiddleware = (cache: ICacheDependency) => (
           },
           (data: string) => cache.set(cacheKey, data),
         )(encode(res, proxyRes.headers));
-      } else if (req.method.toLocaleLowerCase() !== 'get') {
+      } else if (req.method.toLocaleLowerCase() !== 'get' && isHasCache) {
+        debugable(req, {
+          headers: proxyRes.headers,
+          data: proxyRes.data,
+        });
         responseWithCache(cacheKey);
       }
+
+      res.locals = proxyRes.data;
 
       if (!res.headersSent) {
         debugable(req, { headers: proxyRes.headers, data: proxyRes.data });

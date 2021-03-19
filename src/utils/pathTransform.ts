@@ -81,6 +81,12 @@ export function pathTransform(
     ...getUnindexedArrayPath(path),
   ]);
 
+  // root should be processed first
+  if (currentModifier && path === 'root' && config?.modifier?.root) {
+    delete config.modifier.root;
+    return pathTransform(currentModifier(input), config, path);
+  }
+
   if (Array.isArray(input)) {
     const mappedArray = input.map((item, idx) => {
       return pathTransform(item, config, path + `.[${idx}]`);
