@@ -78,6 +78,12 @@ const App = () => {
 };
 
 render(<App />);
+program
+  .command('purge')
+  .description('purge warlock cache')
+  .action(() => {
+    event.emit('purge');
+  });
 
 program
   .command('serve')

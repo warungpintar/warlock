@@ -10,9 +10,12 @@ import coreMiddleware from './coreMiddleware';
 import resolverMiddleware from './resolverMiddleware';
 import { Config } from '../types';
 import { logger } from '../logger';
+import event from '../cli/event';
 
 import LMDB, { ILMDBCacheDependency } from '../libs/lmdb';
+import { purgeCache } from '../libs/cache';
 import { buildDirPath, createDirIfNotExist } from '../utils/fs';
+import { safeGet } from '../utils/object';
 import { WARLOCK_CACHE_DIR_NAME } from '../constant';
 
 const forms = multer();
@@ -31,6 +34,36 @@ const lmdbOpts = pipe(
 );
 
 const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
+const purgeLmdbCache = purgeCache(lmdbOpts)(safeGet('path'));
+
+event.once('purge', () => {
+  const onCachePurgeSuccess = () => {
+    console.log('Cache purged!');
+  };
+
+  const onCachePurgeFailed = () => {
+    console.log('Cache failed to purged!');
+  };
+
+  const purgeCacheHandler = (fn) => {
+    console.log('purging cache...');
+    E.fold(
+      (err) => {
+        console.error('Failed to purge cache');
+        console.error(err);
+      },
+      (result) => {
+        if (result) {
+          return onCachePurgeSuccess();
+        }
+
+        return onCachePurgeFailed();
+      },
+    )(fn());
+  };
+
+  E.map(purgeCacheHandler)(purgeLmdbCache);
+});
 
 app.use(forms.any());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -71,7 +104,7 @@ const cleanup = () => {
     console.info('shutting down...');
     lmdbInstance.close();
     process.exit();
-  }, 250);
+  }, 10);
 };
 
 process.on('SIGINT', cleanup);

@@ -10,9 +10,18 @@ import { pipe, flow } from 'fp-ts/function';
 import * as E from 'fp-ts/lib/Either';
 import * as IO from 'fp-ts/lib/IOEither';
 import * as O from 'fp-ts/Option';
+import { WARLOCK_CACHE_DIR_NAME } from '../src/constant';
 
 import { safeGet } from '../src/utils/object';
 import { strToJson } from '../src/utils/generic';
+import { buildDirPath, createDirIfNotExist, removeDirIfExist } from '../src/utils/fs';
+
+const CACHE_BASE_PATH = process.cwd();
+const concatCachePathWith = buildDirPath(CACHE_BASE_PATH);
+const cacheDirPath = concatCachePathWith(WARLOCK_CACHE_DIR_NAME);
+const createCacheDir = createDirIfNotExist(cacheDirPath);
+
+const createdCacheDirPath = createCacheDir();
 
 describe('memory cache library', () => {
   // prereq step
@@ -98,7 +107,14 @@ describe('memory cache library', () => {
 });
 
 describe('lmdb cache library', () => {
-  const lmdbInstance: ILMDBCacheDependency = new LMDB();
+  const lmdbOpts = pipe(
+    createdCacheDirPath,
+    E.map((x) => O.some({ path: x })),
+    E.getOrElse(() => O.none),
+    O.toUndefined,
+  );
+
+  const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
   const cachedResponsePayload = JSON.stringify({ success: true });
   const set = setGetRequest(
     new URL('https://example.com?john=doe&foo=bar'),
@@ -107,6 +123,12 @@ describe('lmdb cache library', () => {
   set();
 
   const expectation = O.some(cachedResponsePayload);
+
+  afterAll(() => {
+    console.log('removing dir...', cacheDirPath);
+    const removeTestDir = removeDirIfExist(cacheDirPath);
+    removeTestDir();
+  });
 
   it("should match expectation to get from cache with same url's search params order", () => {
     const get = IO.tryCatch(

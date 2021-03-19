@@ -24,9 +24,9 @@ describe('fs utils createDir', () => {
   const basePath = process.cwd();
   const concatBasePathWith = buildDirPath(basePath);
   const dir = concatBasePathWith('test');
-  const removeTestDir = removeDirIfExist(dir);
 
   afterEach(() => {
+    const removeTestDir = removeDirIfExist(dir);
     removeTestDir();
   });
 

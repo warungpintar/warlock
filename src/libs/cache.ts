@@ -2,9 +2,11 @@ import { Reader } from 'fp-ts/lib/Reader';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { IO } from 'fp-ts/lib/IO';
 import * as E from 'fp-ts/Either';
+import * as O from 'fp-ts/Either';
 import { fromNullable, Option } from 'fp-ts/lib/Option';
 
 import { sortURLSearchParams } from '../utils/url';
+import { removeDir } from '../utils/fs';
 import { toString, hashStr } from '../utils/generic';
 
 // @TODO Cache suppose to be modular, where we can select whether the cache will be stored on the memory, db, or file
@@ -53,3 +55,6 @@ export const setGetRequest = (url: URL, responsePayload: string) =>
   pipe(sortURLSearchParams(url), toString, hashStr, (key) => (deps) =>
     setItem(key, responsePayload)(deps),
   );
+
+export const purgeCache = (opts) => (fnGetPath) =>
+  pipe(O.of(opts), O.chain(fnGetPath), O.map(removeDir));

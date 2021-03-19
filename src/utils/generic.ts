@@ -1,8 +1,8 @@
 import md5 from 'md5';
 // https://stackoverflow.com/questions/2722943/is-calculating-an-md5-hash-less-cpu-intensive-than-sha-family-functions
 
-export const log = (x: any) => {
-  console.log(x);
+export const log = (message: string) => (x: any) => {
+  console.log(message, x);
   return x;
 };
 
