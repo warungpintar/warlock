@@ -1,7 +1,11 @@
 import lmdb from 'node-lmdb';
 import path from 'path';
+import { pipe } from 'fp-ts/function';
+import * as E from 'fp-ts/Either';
+import * as O from 'fp-ts/Option';
 
 import { ICacheDependency } from './cache';
+import { createDirIfNotExist } from '../utils/fs';
 
 interface LMDBOptions {
   path: string;
@@ -57,3 +61,14 @@ export default class LMDB {
     this.env.close();
   }
 }
+
+export const _createCacheDirectoryThenGeneratePathOptions = (cacheDirPath) => {
+  const createdCacheDirPath = createDirIfNotExist(cacheDirPath);
+
+  return pipe(
+    createdCacheDirPath(),
+    E.map((x) => O.some({ path: x })),
+    E.getOrElse(() => O.none),
+    O.toUndefined,
+  );
+};

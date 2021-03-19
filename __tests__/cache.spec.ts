@@ -1,5 +1,5 @@
 import LRU from 'lru-cache';
-import LMDB, { ILMDBCacheDependency } from '../src/libs/lmdb';
+import LMDB, { ILMDBCacheDependency, _createCacheDirectoryThenGeneratePathOptions } from '../src/libs/lmdb';
 import {
   getGetRequest,
   hasGetRequest,
@@ -14,14 +14,10 @@ import { WARLOCK_CACHE_DIR_NAME } from '../src/constant';
 
 import { safeGet } from '../src/utils/object';
 import { strToJson } from '../src/utils/generic';
-import { buildDirPath, createDirIfNotExist, removeDirIfExist } from '../src/utils/fs';
+import { buildDirPath, removeDirIfExist } from '../src/utils/fs';
 
 const CACHE_BASE_PATH = process.cwd();
-const concatCachePathWith = buildDirPath(CACHE_BASE_PATH);
-const cacheDirPath = concatCachePathWith(WARLOCK_CACHE_DIR_NAME);
-const createCacheDir = createDirIfNotExist(cacheDirPath);
-
-const createdCacheDirPath = createCacheDir();
+const cacheDirPath = buildDirPath(CACHE_BASE_PATH)(WARLOCK_CACHE_DIR_NAME);
 
 describe('memory cache library', () => {
   // prereq step
@@ -107,12 +103,7 @@ describe('memory cache library', () => {
 });
 
 describe('lmdb cache library', () => {
-  const lmdbOpts = pipe(
-    createdCacheDirPath,
-    E.map((x) => O.some({ path: x })),
-    E.getOrElse(() => O.none),
-    O.toUndefined,
-  );
+  const lmdbOpts = _createCacheDirectoryThenGeneratePathOptions(cacheDirPath);
 
   const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
   const cachedResponsePayload = JSON.stringify({ success: true });
@@ -125,7 +116,6 @@ describe('lmdb cache library', () => {
   const expectation = O.some(cachedResponsePayload);
 
   afterAll(() => {
-    console.log('removing dir...', cacheDirPath);
     const removeTestDir = removeDirIfExist(cacheDirPath);
     removeTestDir();
   });

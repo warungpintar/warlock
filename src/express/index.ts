@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import multer from 'multer';
 import { pipe } from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
-import * as O from 'fp-ts/Option';
 
 import app from './app';
 import coreMiddleware from './coreMiddleware';
@@ -12,25 +11,23 @@ import { Config } from '../types';
 import { logger } from '../logger';
 import event from '../cli/event';
 
-import LMDB, { ILMDBCacheDependency } from '../libs/lmdb';
+import LMDB, {
+  ILMDBCacheDependency,
+  _createCacheDirectoryThenGeneratePathOptions,
+} from '../libs/lmdb';
 import { purgeCache } from '../libs/cache';
-import { buildDirPath, createDirIfNotExist } from '../utils/fs';
+import { buildDirPath } from '../utils/fs';
 import { safeGet } from '../utils/object';
 import { WARLOCK_CACHE_DIR_NAME } from '../constant';
 
 const forms = multer();
 
 const CACHE_BASE_PATH = os.homedir();
-const concatCachePathWith = buildDirPath(CACHE_BASE_PATH);
-const createCacheDir = createDirIfNotExist(
-  concatCachePathWith(WARLOCK_CACHE_DIR_NAME),
-);
 
 const lmdbOpts = pipe(
-  createCacheDir(),
-  E.map((x) => O.some({ path: x })),
-  E.getOrElse(() => O.none),
-  O.toUndefined,
+  WARLOCK_CACHE_DIR_NAME,
+  buildDirPath(CACHE_BASE_PATH),
+  _createCacheDirectoryThenGeneratePathOptions,
 );
 
 const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
