@@ -37,12 +37,12 @@ describe('fs utils checkDir', () => {
     removeTestDir();
   });
 
-  it('should match error expectation directory if not exist', () => {
+  it('should match error expectation if directory not exist', () => {
     const checkDirTest = checkDirectoryExist(dir);
     expect(checkDirTest()).toStrictEqual(E.left(new FileError('directory is not exist', dir)));
   });
 
-  it('should match error expectation directory if exist', () => {
+  it('should match error expectation if directory exist', () => {
     const mkdirTest = createDir(dir);
     const checkDirTest = checkDirectoryExist(dir);
     mkdirTest();
@@ -82,5 +82,30 @@ describe('fs utils createDir', () => {
   it('should match error expectation directory if not exist', () => {
     const mkdirTest = createDirIfNotExist(dir);
     expect(E.fold((a: Error) => a.message, a => a)(mkdirTest())).toContain(dir);
+  });
+});
+
+describe('fs utils removedir', () => {
+  // prerequisite step
+  const basePath = process.cwd();
+  const concatBasePathWith = buildDirPath(basePath);
+  const dir = concatBasePathWith('test');
+
+  afterEach(() => {
+    const removeTestDir = removeDirIfExist(dir);
+    removeTestDir();
+  });
+
+  it('should match error expectation if directory not exist', () => {
+    const removeTestDir = removeDirIfExist(dir);
+    expect(removeTestDir()).toStrictEqual(E.left(new FileError('directory is not exist', dir)));
+  });
+
+  it('should match expectation if  directory exist', () => {
+    const mkdirTest = createDir(dir);
+    const removeTestDir = removeDirIfExist(dir);
+    mkdirTest();
+
+    expect(removeTestDir()).toStrictEqual(E.right(dir));
   });
 });

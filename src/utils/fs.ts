@@ -40,16 +40,16 @@ export const checkDirectoryExist = (
     ),
   );
 
-export const removeDir = (dirPath: string): IOE.IOEither<Error, boolean> => {
+const removeDir = (dirPath: string): IOE.IOEither<Error, string> => {
   return IOE.tryCatch(() => {
     fs.rmdirSync(dirPath, { recursive: true });
-    return true;
+    return dirPath;
   }, E.toError);
 };
 
 export const removeDirIfExist = (
   dirPath: string,
-): IOE.IOEither<Error, boolean> =>
+): IOE.IOEither<Error, string> =>
   pipe(checkDirectoryExist(dirPath), IOE.chain(removeDir));
 
 export const createDir = (dirPath: string): IOE.IOEither<Error, string> =>
