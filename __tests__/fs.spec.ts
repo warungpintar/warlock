@@ -1,4 +1,11 @@
-import { buildDirPath, createDir, removeDirIfExist } from '../src/utils/fs';
+import {
+  buildDirPath,
+  createDir,
+  removeDirIfExist,
+  createDirIfNotExist,
+  checkDirectoryExist,
+  FileError,
+} from '../src/utils/fs';
 import * as E from 'fp-ts/lib/Either';
 
 describe('fs utils buildDirPath with basePath', () => {
@@ -16,6 +23,31 @@ describe('fs utils buildDirPath with basePath', () => {
 
     const concatBasePathWith = buildDirPath(basePath);
     expect(concatBasePathWith('test')).toEqual(expectation);
+  });
+});
+
+describe('fs utils checkDir', () => {
+  // prerequisite step
+  const basePath = process.cwd();
+  const concatBasePathWith = buildDirPath(basePath);
+  const dir = concatBasePathWith('test');
+
+  afterEach(() => {
+    const removeTestDir = removeDirIfExist(dir);
+    removeTestDir();
+  });
+
+  it('should match error expectation directory if not exist', () => {
+    const checkDirTest = checkDirectoryExist(dir);
+    expect(checkDirTest()).toStrictEqual(E.left(new FileError('directory is not exist', dir)));
+  });
+
+  it('should match error expectation directory if exist', () => {
+    const mkdirTest = createDir(dir);
+    const checkDirTest = checkDirectoryExist(dir);
+    mkdirTest();
+
+    expect(checkDirTest()).toStrictEqual(E.right(dir));
   });
 });
 
@@ -45,5 +77,10 @@ describe('fs utils createDir', () => {
         (a) => a,
       )(mkdirTest()),
     ).toContain('file already exists');
+  });
+
+  it('should match error expectation directory if not exist', () => {
+    const mkdirTest = createDirIfNotExist(dir);
+    expect(E.fold((a: Error) => a.message, a => a)(mkdirTest())).toContain(dir);
   });
 });

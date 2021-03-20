@@ -24,17 +24,6 @@ export function FileError(this: FileError, message: string, path?: string) {
 FileError.prototype = Object.create(Error.prototype);
 FileError.prototype.constructor = FileError;
 
-const onDirectoryNotExist = (error: FileError): IOE.IOEither<Error, string> =>
-  pipe(
-    error,
-    safeGet('path'),
-    O.map(createDir),
-    O.getOrElse(() => IOE.left(new Error('Failed to create directory'))),
-  );
-
-const onDirectoryExist = (dirPath: string): IOE.IOEither<Error, string> =>
-  IOE.of(dirPath);
-
 export const buildDirPath = (baseDirPath: string) => (
   dirName: string,
 ): string => pipe(baseDirPath, concat('/'), concat(dirName));
@@ -69,9 +58,21 @@ export const createDir = (dirPath: string): IOE.IOEither<Error, string> =>
     return dirPath;
   }, E.toError);
 
-export const createDirIfNotExist = (dirPath: string) =>
-  pipe(
+export const createDirIfNotExist = (dirPath: string) => {
+  const onDirectoryNotExist = (error: FileError): IOE.IOEither<Error, string> =>
+    pipe(
+      error,
+      safeGet('path'),
+      O.map(createDir),
+      O.getOrElse(() => IOE.left(new Error('Failed to create directory'))),
+    );
+
+  const onDirectoryExist = (dirPath: string): IOE.IOEither<Error, string> =>
+    IOE.of(dirPath);
+
+  return pipe(
     IOE.of(dirPath),
     IOE.chain(checkDirectoryExist),
     IOE.fold(onDirectoryNotExist, onDirectoryExist),
   );
+};
