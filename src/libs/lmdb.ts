@@ -1,5 +1,4 @@
 import lmdb from 'node-lmdb';
-import path from 'path';
 import { pipe } from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
 import * as O from 'fp-ts/Option';
@@ -22,7 +21,6 @@ export default class LMDB {
   constructor(overrideOpts?: LMDBOptions) {
     this.env = new lmdb.Env();
     const defaultOpts = {
-      path: path.join(__dirname, '../../.cache'),
       maxDbs: 1, // set as single DB
     };
     const theOpts = Object.assign(defaultOpts, overrideOpts);
