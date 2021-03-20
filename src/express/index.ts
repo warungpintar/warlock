@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import multer from 'multer';
 import { pipe } from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
+import * as O from 'fp-ts/Option';
 
 import app from './app';
 import coreMiddleware from './coreMiddleware';
@@ -33,34 +34,30 @@ const lmdbOpts = pipe(
 const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
 const purgeLmdbCache = purgeCache(lmdbOpts)(safeGet('path'));
 
-event.once('purge', () => {
+const purge = () => {
   const onCachePurgeSuccess = () => {
-    console.log('Cache purged!');
+    console.log('Cache purged success!');
   };
 
-  const onCachePurgeFailed = () => {
-    console.log('Cache failed to purged!');
+  const onCachePurgeFailed = (error: Error) => {
+    console.error('Cache failed to purged!');
+    console.error(error);
   };
 
   const purgeCacheHandler = (fn) => {
-    console.log('purging cache...');
     E.fold(
-      (err) => {
-        console.error('Failed to purge cache');
-        console.error(err);
-      },
-      (result) => {
-        if (result) {
-          return onCachePurgeSuccess();
-        }
-
-        return onCachePurgeFailed();
-      },
+      (err: Error) => onCachePurgeFailed(err),
+      (result) =>
+        result
+          ? onCachePurgeSuccess()
+          : onCachePurgeFailed(new Error('Unknown')),
     )(fn());
   };
 
-  E.map(purgeCacheHandler)(purgeLmdbCache);
-});
+  O.map(purgeCacheHandler)(purgeLmdbCache);
+};
+
+event.once('purge', purge);
 
 app.use(forms.any());
 app.use(bodyParser.urlencoded({ extended: true }));
