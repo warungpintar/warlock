@@ -1,0 +1,8 @@
+{
+  "customName": "foo",
+  "customNum": 1234,
+  "customArr": [1, 2, 3, 4],
+  "customObj": {
+    "customNested": "bar"
+  }
+}
