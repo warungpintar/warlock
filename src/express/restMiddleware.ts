@@ -29,6 +29,14 @@ const restMiddleware = (cache: ICacheDependency) => (
     }
   };
 
+  // handle preflight
+  if (req.method?.toLocaleLowerCase() === 'options' && !res.headersSent) {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Headers', '*');
+    res.set('Access-Control-Allow-Methods', '*');
+    return res.end();
+  }
+
   const isHasCache = cache.has(cacheKey);
   if (isHasCache && req.method.toLocaleLowerCase() === 'get') {
     responseWithCache(cacheKey);

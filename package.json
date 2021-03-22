@@ -12,10 +12,11 @@
   "license": "ISC",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/types/src/index.d.ts",
   "typings": "dist/types/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "bin": {
     "warlock": "./bin/warlock"
@@ -29,7 +30,7 @@
     "build": "concurrently yarn:build:*",
     "build:esm": "cross-env BABEL_ENV=esm babel src --extensions '.ts,.tsx' -d dist/esm --source-maps",
     "build:cjs": "cross-env BABEL_ENV=cjs babel src --extensions '.ts,.tsx' -d dist/cjs --source-maps",
-    "build_:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
+    "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
     "test": "concurrently yarn:test:*",
     "test:unit": "NODE_ENV=test jest",
     "test:type": "tsc --noEmit",

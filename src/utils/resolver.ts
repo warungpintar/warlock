@@ -55,7 +55,7 @@ export const parseModule = (url: URL) => (config: Module[]) =>
   findFirst((module: Module) => module.origin === url.origin)(config);
 
 export const parseModulePathHandler = (url: URL) => (module: Module) => {
-  const pathHandlerKey = Object.keys(module.transforms).find((item) => {
+  const pathHandlerKey = Object.keys(module.transforms ?? {}).find((item) => {
     if (item === url.pathname) return true;
 
     const pattern = new UrlPattern(item);
