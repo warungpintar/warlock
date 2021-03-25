@@ -1527,6 +1527,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.12.13":
+  version "7.13.10"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.13.10.tgz#47d42a57b6095f4468da440388fdbad8bebf0d7d"
+  integrity sha512-4QPkjJq6Ns3V/RgpEahRk+AGfL0eO6RHHtTWoNNr5mO49G6B5+X6d6THgWEAvTrznU5xYpbAlVKRYcsCgh/Akw==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.10.4", "@babel/template@^7.12.7":
   version "7.12.7"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.12.7.tgz#c817233696018e39fbb6c491d2fb684e05ed43bc"
@@ -3031,6 +3038,16 @@
     "@warungpintar/eslint-config-base" "^0.2.2"
     eslint-config-prettier "^6.7.0"
     eslint-config-xo-typescript "^0.23.0"
+
+"@warungpintar/ninshu@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@warungpintar/ninshu/-/ninshu-0.0.2.tgz#a4ec5fb8baa8616faaabe97b60c6bd2cb81b5e96"
+  integrity sha512-fr7EVCGglby5wUUKp2bRmi5WBwcLO0WjSpz+/qTtozHMyrDNi7kNpscoPAnFix0zh2P2Vtl/tSpydAQRCNo2OA==
+  dependencies:
+    "@babel/runtime" "^7.12.13"
+    expressive-ts "^0.0.2"
+    fp-ts "^2.9.5"
+    io-ts "^2.2.14"
 
 "@warungpintar/prettier-config@^0.1.2":
   version "0.1.2"
@@ -5223,6 +5240,11 @@ express@4.17.1, express@^4.17.1:
     utils-merge "1.0.1"
     vary "~1.1.2"
 
+expressive-ts@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/expressive-ts/-/expressive-ts-0.0.2.tgz#3ce75474879e610c71cfdfb88d106e8164f26cf3"
+  integrity sha512-FypiruhZHavVe7x7uLGRv34MwKdBTSMik57pDyHlLw44y3ivxnLfyqmcKo6sAclagU5LBllpdeE06B1HOSHYVw==
+
 ext@^1.1.2:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/ext/-/ext-1.4.0.tgz#89ae7a07158f79d35517882904324077e4379244"
@@ -6232,6 +6254,11 @@ internal-slot@^1.0.3:
     get-intrinsic "^1.1.0"
     has "^1.0.3"
     side-channel "^1.0.4"
+
+io-ts@^2.2.14:
+  version "2.2.16"
+  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.2.16.tgz#597dffa03db1913fc318c9c6df6931cb4ed808b2"
+  integrity sha512-y5TTSa6VP6le0hhmIyN0dqEXkrZeJLeC5KApJq6VLci3UEKF80lZ+KuoUs02RhBxNWlrqSNxzfI7otLX1Euv8Q==
 
 ip-regex@^2.1.0:
   version "2.1.0"
