@@ -67,6 +67,7 @@ app.use(resolverMiddleware);
 app.use((_, res) => {
   if (typeof res.locals === 'object' && process.env.NODE_ENV !== 'test') {
     res.set('Content-Type', 'application/json; charset=utf-8');
+    res.set('Access-Control-Allow-Origin', '*');
   }
 
   res.send(res.locals);
