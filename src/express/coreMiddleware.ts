@@ -9,23 +9,16 @@ import { ICacheDependency } from '../libs/cache';
 const coreMiddleware = (cache: ICacheDependency): RequestHandler => (
   ...handler
 ) => {
-  const [req, res] = handler;
+  const [req, , next] = handler;
   const maybeUrl = parseUrl(req.path.slice(1));
 
-  O.fold(
-    () => {
-      res.status(400).json({
-        message: `path: ${req.path} is not handled by any resolvers`,
-      });
-    },
-    (url: URL) => {
-      if (url.pathname.includes('/graphql')) {
-        graphqlMiddleware(url)(...handler);
-      } else {
-        restMiddleware(cache)(url)(...handler);
-      }
-    },
-  )(maybeUrl);
+  O.fold(next, (url: URL) => {
+    if (url.pathname.includes('/graphql')) {
+      graphqlMiddleware(url)(...handler);
+    } else {
+      restMiddleware(cache)(url)(...handler);
+    }
+  })(maybeUrl);
 };
 
 export default coreMiddleware;

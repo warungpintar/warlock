@@ -1,5 +1,5 @@
 import path from 'path';
-import express, { Router } from 'express';
+import express from 'express';
 import os from 'os';
 import bodyParser from 'body-parser';
 import multer from 'multer';
@@ -70,17 +70,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api', apiRoutes);
 
-const configRouter = Router();
-
-configRouter.use('*', (_, res) => {
-  res.sendFile(path.join(__dirname, '../../www/config.html'));
-});
-
-app.use('/config', configRouter);
-
 app.use(coreMiddleware(lmdbInstance));
 app.use(resolverMiddleware);
 app.use((_, res) => {
+  if (typeof res.locals && Object.keys(res.locals).length === 0) {
+    return res.sendFile(path.join(__dirname, '../../www/index.html'));
+  }
+
   if (typeof res.locals === 'object' && process.env.NODE_ENV !== 'test') {
     res.set('Content-Type', 'application/json; charset=utf-8');
     res.set('Access-Control-Allow-Origin', '*');

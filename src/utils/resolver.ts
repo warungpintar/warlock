@@ -1,4 +1,5 @@
 import * as O from 'fp-ts/Option';
+import * as F from 'fp-ts/function';
 import { findFirst, reduce } from 'fp-ts/Array';
 import UrlPattern from 'url-pattern';
 import { Config } from '../types/config-combine';
@@ -31,6 +32,15 @@ export type Module = {
   name: string;
   origin: string;
   transforms: PathHandler;
+};
+
+export const flattenPathHandler = (pathHandler: PathHandler) => {
+  return F.flow((data: PathHandler) => {
+    return Object.keys(data).map((key) => ({
+      key,
+      ...data[key],
+    }));
+  })(pathHandler);
 };
 
 export const resolverMapper = (context: Context, rootData: any) => (

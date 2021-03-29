@@ -1,11 +1,13 @@
 import { Router } from 'express';
+import { app } from '..';
 
 const router = Router();
+const configRouter = Router();
 
-router.get('/', (_, res) => {
-  res.json({
-    message: 'welcome to warlock',
-  });
+configRouter.get('/', (_, res) => {
+  res.json(app.get('config'));
 });
+
+router.use('/config', configRouter);
 
 export default router;
