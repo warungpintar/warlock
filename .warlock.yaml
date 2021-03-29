@@ -7,13 +7,17 @@ rest:
       transforms:
         # (origin) => transform by field(faker) => new Responses(origin+faker_field)
         /api/v2/pokemon:
-          get:
+          patch:
             - field: root.results.[0].name
               resolvers:
                 - faker: name.firstName
             - field: root.results.[1].name
               resolvers:
                 - faker: git.commitSha
+          get:
+            - field: root.results.[0].name
+              resolvers:
+                - faker: name.firstName
             - field: root.results.[2].name
               resolvers:
                 - faker: lorem.paragraphs
@@ -21,7 +25,7 @@ rest:
               resolvers:
                 - path: ./resolvers/result-resolvers.js
         /api/v3/pokemon:
-          get:
+          post:
             - field: root
               resolvers:
                 - json: ./resolvers/pokemonv3.json
