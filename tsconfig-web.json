@@ -22,13 +22,4 @@
   "include": [
     "src/www"
   ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS",
-      "resolveJsonModule": true,
-      "noImplicitAny": false,
-      "jsx": "react",
-      "target": "es5"
-    }
-  }
 }

@@ -3,7 +3,10 @@
   "compilerOptions": {
     "strict": false,
     "jsx": "react",
-    "noEmit": false
+    "noEmit": false,
+    "lib": [
+      "ESNext"
+    ]
   },
   "typeRoots": [
     "./types",

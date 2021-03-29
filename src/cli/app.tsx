@@ -71,13 +71,16 @@ const App = () => {
       <Box flexDirection="column" marginBottom={1}>
         <BigText colors={['#de7106']} font="tiny" text="warlock" />
         <Text color="blueBright">version {packageJson.version}</Text>
+        <Text color="blueBright">running at port {process.env.PORT}</Text>
+        <Text color="yellowBright">
+          open web interface at http://localhost:{process.env.PORT}/config
+        </Text>
         <Text color="blueBright">press `q` to exit</Text>
       </Box>
     </Box>
   );
 };
 
-render(<App />);
 program
   .command('purge')
   .description('purge warlock cache')
@@ -91,7 +94,10 @@ program
   .option('-c, --config <config>', 'specify config path')
   .option('-p, --port <port>', 'specify port')
   .action(({ config, port }) => {
-    runServer(config, port ?? 4000);
+    const _port = port ?? 4000;
+    process.env.PORT = _port;
+    runServer(config, _port);
+    render(<App />);
   });
 
 program.parse(process.argv);

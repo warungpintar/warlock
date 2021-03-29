@@ -1,14 +1,15 @@
-const base = require('@warungpintar/warpin-scripts/config/eslint.config');
-
 module.exports = {
-  ...base,
-  extends: [...base.extends, 'plugin:react/recommended', 'eslint:recommended'],
+  root: true,
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
   rules: {
-    '@typescript-eslint/camelcase': 'off',
-    '@typescript-eslint/class-name-casing': 'off',
-    '@typescript-eslint/generic-type-naming': 'off',
-    '@typescript-eslint/member-naming': 'off',
-    '@typescript-eslint/no-untyped-public-signature': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
   },
   env: {
     browser: true,

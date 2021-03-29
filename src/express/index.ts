@@ -1,3 +1,5 @@
+import path from 'path';
+import express, { Router } from 'express';
 import os from 'os';
 import bodyParser from 'body-parser';
 import multer from 'multer';
@@ -5,12 +7,12 @@ import { pipe } from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
 import * as O from 'fp-ts/Option';
 
-import app from './app';
 import coreMiddleware from './coreMiddleware';
 import resolverMiddleware from './resolverMiddleware';
 import { Config } from '../types';
 import { logger } from '../logger';
 import event from '../cli/event';
+import apiRoutes from './routes/api';
 
 import LMDB, {
   ILMDBCacheDependency,
@@ -20,6 +22,8 @@ import { purgeCache } from '../libs/cache';
 import { buildDirPath } from '../utils/fs';
 import { safeGet } from '../utils/object';
 import { WARLOCK_CACHE_DIR_NAME } from '../constant';
+
+export const app = express();
 
 const forms = multer();
 
@@ -59,9 +63,21 @@ const purge = () => {
 
 event.once('purge', purge);
 
+app.use('/', express.static(path.join(__dirname, '../../www')));
+
 app.use(forms.any());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use('/api', apiRoutes);
+
+const configRouter = Router();
+
+configRouter.use('*', (_, res) => {
+  res.sendFile(path.join(__dirname, '../../www/config.html'));
+});
+
+app.use('/config', configRouter);
+
 app.use(coreMiddleware(lmdbInstance));
 app.use(resolverMiddleware);
 app.use((_, res) => {

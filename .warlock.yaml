@@ -25,6 +25,14 @@ rest:
             - field: root
               resolvers:
                 - json: ./resolvers/pokemonv3.json
+    - name: Wiki API
+      origin: https://wikimedia.org
+      transforms:
+        /api/rest_v1/feed/availability:
+          get:
+            - field: 'root.picture_of_the_day'
+              resolvers:
+                - path: ./resolvers/result-resolvers.js
 graphql:
   sources:
     - name: UploadFiles

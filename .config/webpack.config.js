@@ -560,6 +560,7 @@ module.exports = function(webpackEnv) {
         Object.assign(
           {},
           {
+            filename: 'config.html',
             inject: true,
             template: paths.appHtml,
           },

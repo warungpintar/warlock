@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import * as O from 'fp-ts/Option';
 import { flow } from 'fp-ts/function';
-import app from './app';
+import { app } from '../express';
 import {
   parseUrl,
   pathTransform,
