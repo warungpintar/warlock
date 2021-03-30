@@ -1,0 +1,38 @@
+image: node:14.16.0-alpine
+
+before_script:
+  - which yarn && apk add --no-cache git
+  - echo CI_PROJECT_ID=${CI_PROJECT_ID}
+  - echo NPM_TOKEN=${NPM_TOKEN}
+  - echo CI_JOB_TOKEN=${CI_JOB_TOKEN}
+  - echo //gitlab.warungpintar.co/api/v4/projects/{CI_PROJECT_ID}/packages/npm/:_authToken="$NPM_TOKEN" >> ~/.npmrc
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+stages:
+  - test
+  - publish
+
+lint:
+  stage: test
+  script:
+    - yarn --non-interactive --non-progress --ignore-scripts
+    - yarn test:lint
+
+unit-test:
+  stage: test
+  script:
+    - yarn --non-interactive --non-progress --ignore-scripts
+    - yarn test:unit
+
+publish:
+  stage: publish
+  script:
+    - yarn --non-interactive --non-progress --ignore-scripts
+    - yarn build
+    - yarn semantic-release
+  only:
+    - master
