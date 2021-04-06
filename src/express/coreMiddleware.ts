@@ -12,7 +12,7 @@ const coreMiddleware = (cache: ICache): RequestHandler => (...handler) => {
 
   O.fold(next, (url: URL) => {
     if (url.pathname.includes('/graphql')) {
-      graphqlMiddleware(url)(...handler);
+      graphqlMiddleware()(...handler);
     } else {
       restMiddleware(cache)(url)(...handler);
     }

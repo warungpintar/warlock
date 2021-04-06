@@ -30,7 +30,7 @@
     "build:cjs": "cross-env NODE_ENV=test BUILD_ENV=cjs babel src --extensions '.ts,.tsx' -d dist/cjs --source-maps",
     "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
     "test": "concurrently yarn:test:*",
-    "test:unit": "NODE_ENV=test jest -i",
+    "test:unit": "NODE_ENV=test jest",
     "test:type": "tsc --noEmit",
     "test:lint": "yarn lint src/**/*.ts",
     "postinstall": "is-ci || husky install .config/husky",

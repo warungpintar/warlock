@@ -40,7 +40,7 @@ const getUnindexedArrayPath = (path: string): string[] => {
  * @param data
  * @param selectors
  */
-const takeSomeObjectKey = (data: object, selectors: string[]) => {
+const takeSomeObjectKey = (data: any, selectors: string[]) => {
   for (const selector of selectors) {
     if (data[selector] !== undefined) {
       return data[selector];
