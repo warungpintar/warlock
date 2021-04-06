@@ -7,3 +7,4 @@ build/
 .autoenv.zsh
 yarn-error.log
 .cache
+/.warlock.yaml

@@ -2,11 +2,9 @@ import { Reader } from 'fp-ts/lib/Reader';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { IO } from 'fp-ts/lib/IO';
 import * as E from 'fp-ts/Either';
-import * as O from 'fp-ts/Option';
 import { fromNullable, Option } from 'fp-ts/lib/Option';
 
 import { sortURLSearchParams } from '../utils/url';
-import { removeDirIfExist } from '../utils/fs';
 import { toString, hashStr } from '../utils/generic';
 
 // @TODO Cache suppose to be modular, where we can select whether the cache will be stored on the memory, db, or file
@@ -21,6 +19,7 @@ export interface ICacheDependency {
   has: (key: string) => boolean;
   get: (key: string) => string;
   set: (key: string, value: string) => boolean;
+  reset: () => E.Either<Error, null> | void;
 }
 
 export interface ICache {
@@ -55,7 +54,3 @@ export const setGetRequest = (url: URL, responsePayload: string) =>
   pipe(sortURLSearchParams(url), toString, hashStr, (key) => (deps) =>
     setItem(key, responsePayload)(deps),
   );
-
-export const purgeCache = (opts) => (fnGetPath) => {
-  return pipe(O.of(opts), O.chain(fnGetPath), O.map(removeDirIfExist));
-};

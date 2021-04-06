@@ -9,6 +9,7 @@ import runServer from './runServer';
 import packageJson from '../../package.json';
 import event from './event';
 import { RestEvent } from '../logger';
+import { cleanup } from '../express';
 
 // clear the console
 console.clear();
@@ -39,7 +40,11 @@ const App = () => {
 
   useInput((input) => {
     if (input === 'q') {
-      process.exit();
+      cleanup();
+    }
+
+    if (input === 'p') {
+      event.emit('purge');
     }
 
     if (!isNaN(Number(input))) {
@@ -75,18 +80,12 @@ const App = () => {
         <Text color="yellowBright">
           open web interface at http://localhost:{process.env.PORT}/config
         </Text>
+        <Text color="blueBright">press `p` to purge cache</Text>
         <Text color="blueBright">press `q` to exit</Text>
       </Box>
     </Box>
   );
 };
-
-program
-  .command('purge')
-  .description('purge warlock cache')
-  .action(() => {
-    event.emit('purge');
-  });
 
 program
   .command('serve')

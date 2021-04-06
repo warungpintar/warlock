@@ -1,9 +1,6 @@
-import os from 'os';
-import path from 'path';
-import fs from 'fs/promises';
 import request from 'supertest';
 import { Config } from '../src/types/config-combine';
-import { runForTest } from '../src/express';
+import { runForTest, purgeCache } from '../src/express';
 
 const config: Config = {
   rest: {
@@ -30,12 +27,9 @@ const config: Config = {
   },
 };
 
-const homeDir = os.homedir();
-const cachePath = path.join(homeDir, '.warlock-cache');
-
 describe('json resolver 1', () => {
   beforeAll(() => {
-    return Promise.all([fs.rmdir(cachePath, { recursive: true })]);
+    purgeCache();
   });
 
   const app = runForTest(config);

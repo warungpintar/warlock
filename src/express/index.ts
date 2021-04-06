@@ -5,7 +5,6 @@ import bodyParser from 'body-parser';
 import multer from 'multer';
 import { pipe } from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
-import * as O from 'fp-ts/Option';
 
 import coreMiddleware from './coreMiddleware';
 import resolverMiddleware from './resolverMiddleware';
@@ -15,14 +14,12 @@ import event from '../cli/event';
 import apiRoutes from './routes/api';
 
 import LMDB, {
-  ILMDBCacheDependency,
   _createCacheDirectoryThenGeneratePathOptions,
 } from '../libs/lmdb';
-import { purgeCache } from '../libs/cache';
 import { buildDirPath } from '../utils/fs';
-import { safeGet } from '../utils/object';
 import { WARLOCK_CACHE_DIR_NAME } from '../constant';
 
+const IS_TEST_ENV = process.env.NODE_ENV === 'test';
 export const app = express();
 
 const forms = multer();
@@ -35,33 +32,21 @@ const lmdbOpts = pipe(
   _createCacheDirectoryThenGeneratePathOptions,
 );
 
-const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
-const purgeLmdbCache = purgeCache(lmdbOpts)(safeGet('path'));
+const lmdbInstance = new LMDB(lmdbOpts);
 
-const purge = () => {
-  const onCachePurgeSuccess = () => {
-    console.log('Cache purged success!');
-  };
-
-  const onCachePurgeFailed = (error: Error) => {
-    console.error('Cache failed to purged!');
-    console.error(error);
-  };
-
-  const purgeCacheHandler = (fn) => {
-    E.fold(
-      (err: Error) => onCachePurgeFailed(err),
-      (result) =>
-        result
-          ? onCachePurgeSuccess()
-          : onCachePurgeFailed(new Error('Unknown')),
-    )(fn());
-  };
-
-  O.map(purgeCacheHandler)(purgeLmdbCache);
+export const purgeCache = () => {
+  const maybePurgedCache = lmdbInstance.reset();
+  E.fold(
+    (e) => {
+      !IS_TEST_ENV && logger.error(e);
+    },
+    () => {
+      !IS_TEST_ENV && logger.info('cache purged');
+    },
+  )(maybePurgedCache);
 };
 
-event.once('purge', purge);
+event.on('purge', purgeCache);
 
 app.use('/', express.static(path.join(__dirname, '../../www')));
 
@@ -77,7 +62,7 @@ app.use((_, res) => {
     return res.sendFile(path.join(__dirname, '../../www/index.html'));
   }
 
-  if (typeof res.locals === 'object' && process.env.NODE_ENV !== 'test') {
+  if (typeof res.locals === 'object' && !IS_TEST_ENV) {
     res.set('Content-Type', 'application/json; charset=utf-8');
     res.set('Access-Control-Allow-Origin', '*');
   }
@@ -103,7 +88,7 @@ export const runForTest = (config: Config) => {
   return app;
 };
 
-const cleanup = () => {
+export const cleanup = () => {
   console.info('shutdown signal is received');
   console.info('will shutdown in 250ms');
 

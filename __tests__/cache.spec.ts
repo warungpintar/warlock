@@ -1,11 +1,8 @@
 import LRU from 'lru-cache';
-import LMDB, { ILMDBCacheDependency, _createCacheDirectoryThenGeneratePathOptions } from '../src/libs/lmdb';
-import {
-  getGetRequest,
-  hasGetRequest,
-  setGetRequest,
-  ICacheDependency,
-} from '../src/libs/cache';
+import LMDB, {
+  _createCacheDirectoryThenGeneratePathOptions,
+} from '../src/libs/lmdb';
+import { getGetRequest, hasGetRequest, setGetRequest } from '../src/libs/cache';
 import { pipe, flow } from 'fp-ts/function';
 import * as E from 'fp-ts/lib/Either';
 import * as IO from 'fp-ts/lib/IOEither';
@@ -30,7 +27,7 @@ describe('memory cache library', () => {
     maxAge: cacheAge,
   };
 
-  const cacheInstance: ICacheDependency = new LRU(options);
+  const cacheInstance = new LRU(options);
   const cachedResponsePayload = JSON.stringify({ success: true });
   const set = setGetRequest(
     new URL('https://example.com?john=doe&foo=bar'),
@@ -105,7 +102,7 @@ describe('memory cache library', () => {
 describe('lmdb cache library', () => {
   const lmdbOpts = _createCacheDirectoryThenGeneratePathOptions(cacheDirPath);
 
-  const lmdbInstance: ILMDBCacheDependency = new LMDB(lmdbOpts);
+  const lmdbInstance = new LMDB(lmdbOpts);
   const cachedResponsePayload = JSON.stringify({ success: true });
   const set = setGetRequest(
     new URL('https://example.com?john=doe&foo=bar'),
