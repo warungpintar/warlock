@@ -1,0 +1,4 @@
+rest:
+  sources:
+    - name: Poke API
+      origin: https://pokeapi.co

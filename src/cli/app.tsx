@@ -92,11 +92,15 @@ program
   .description('serve warlock project')
   .option('-c, --config <config>', 'specify config path')
   .option('-p, --port <port>', 'specify port')
-  .action(({ config, port }) => {
+  .option('-ni, --non-interactive', 'do not show interactive interface')
+  .action(({ config, port, nonInteractive }) => {
     const _port = port ?? 4000;
     process.env.PORT = _port;
     runServer(config, _port);
-    render(<App />);
+
+    if (!nonInteractive) {
+      render(<App />);
+    }
   });
 
 program.parse(process.argv);

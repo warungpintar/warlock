@@ -352,3 +352,60 @@ Perhatikan kembali response yang telah ditransform oleh Warlock. Value dari fiel
 ```
 
 Berikut penjelasannya, pengubahan config di [langkah 7](#quickstarts), kita meng-apply json resolver pada field path `root.results.[].url` yang diarahkan ke file json `example.json`.
+
+# <a name="quickstarts"></a>Run Warlock on Docker
+
+Pastikan [docker](https://docs.docker.com/get-docker/) telah tersetup pada local machine
+
+### 1) Build Warlock docker image
+
+```sh
+docker build -t warlock .
+```
+
+### 2) Run warlock in docker container
+
+Warlock mengexpose 2 (dua) buah port yaitu port `4000` dan `3000`. Untuk itu kita perlu melakukan publish container port terhadap host port, dalam contoh dibawah ini kita menggunakan port yang sama antara host dan container, akan tetapi kita dapat menggunakan port lain pada host.
+
+#### Using default config
+
+```
+docker run -p 4000:4000 -p 3000:3000 warlock
+```
+
+#### Using your config
+
+Untuk dapat menjalankan Warlock container dengan config sendiri, maka kita harus melakukan bind mount host volume dengan container volume. Path Warlock config pada container berada di `/usr/src/app/config`, sehingga yang perlu kita lakukan adalah melakukan bind mount path pada host yang berisi config Warlock kepada path container tersebut.
+
+Sebagai contoh, config Warlock kita berada pada `/Users/warungpintar/my_project/warlock-config` dengan struktur directory sebagai berikut ini
+
+```
+my_project
++- warlock-config
+   +- .warlock.yaml
+   +- resolvers
+      +- my-resolver.js
+```
+
+```yaml
+# .warlock.yaml
+rest:
+  sources:
+    - name: Poke API
+      origin: https://pokeapi.co
+      transforms:
+        # (origin) => transform by field(faker) => new Responses(origin+faker_field)
+        /api/v2/pokemon:
+          get:
+            - field: root.results.[].name
+              resolvers:
+                - path: ./config/resolvers/my-resolver.js
+```
+
+Setelah itu, jalan kan container dengan command sebagai berikut:
+
+```
+docker run -p 4000:4000 -p 3000:3000 -v /Users/warungpintar/my_project/warlock-config:/usr/src/app/config warlock
+```
+
+untuk memastikan
