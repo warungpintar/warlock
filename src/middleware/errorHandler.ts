@@ -1,4 +1,3 @@
-// @ts-nocheck
 // @TODO {proxy} need following @types/koa-bodyparser
 const errorHandler = async (ctx, next) => {
   return next().catch((err) => {

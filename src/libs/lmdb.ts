@@ -4,14 +4,14 @@ import { pipe } from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
 import * as O from 'fp-ts/Option';
 
-import { ICacheDependency } from './cache';
+import { ICache } from './cache';
 import { createDirIfNotExist, removeDirIfExist } from '../utils/fs';
 
-interface LMDBOptions {
+export interface LMDBOptions {
   path: string;
   maxDbs: number;
 }
-export default class LMDB implements ICacheDependency {
+export default class LMDB implements ICache {
   'env': any;
   'dbi': any;
   'txn': any;

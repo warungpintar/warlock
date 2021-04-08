@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import axios, { Method } from 'axios';
 import * as E from 'fp-ts/Either';
-import { ICacheDependency } from '../libs/cache';
+import { ICache } from '../libs/cache';
 import { getCacheKey, encode, decode } from '../libs/cacheHttp';
 import { concatHeaders } from '../libs/http';
 import { logger, debugable } from '../logger';
@@ -13,12 +13,14 @@ const instance = axios.create({
   validateStatus: () => true,
 });
 
-const restMiddleware = (cache: ICacheDependency) => (
-  url: URL,
-): RequestHandler => (req, res, next) => {
+const restMiddleware = (cache: ICache) => (url: URL): RequestHandler => (
+  req,
+  res,
+  next,
+) => {
   const cacheKey = getCacheKey(req);
   const responseWithCache = (cacheKey: string) => {
-    const cachedResponse = decode(cache.get(cacheKey));
+    const cachedResponse = decode(cache.get(cacheKey) ?? '{}');
     if (E.isRight(cachedResponse)) {
       const _cachedResponse = cachedResponse.right;
       res.locals = _cachedResponse?.data;

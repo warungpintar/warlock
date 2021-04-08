@@ -12,6 +12,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     'react/prop-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
   env: {
     browser: true,

@@ -4,11 +4,9 @@ import restMiddleware from './restMiddleware';
 import graphqlMiddleware from './grapqhlMiddleware';
 
 import { parseUrl } from '../utils';
-import { ICacheDependency } from '../libs/cache';
+import { ICache } from '../libs/cache';
 
-const coreMiddleware = (cache: ICacheDependency): RequestHandler => (
-  ...handler
-) => {
+const coreMiddleware = (cache: ICache): RequestHandler => (...handler) => {
   const [req, , next] = handler;
   const maybeUrl = parseUrl(req.path.slice(1));
 

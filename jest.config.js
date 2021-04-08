@@ -8,6 +8,7 @@ module.exports = {
   transform: { '.(ts|tsx)$': 'ts-jest/dist' },
   transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$'],
   testMatch: ['**/__tests__/**/*.spec.[jt]s?(x)'],
+  testTimeout: 15000,
   globals: {
     'ts-jest': {
       tsconfig: 'tsconfig.json',
