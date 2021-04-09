@@ -1,5 +1,4 @@
 import path from 'path';
-import lmdb from 'node-lmdb';
 import { pipe } from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
 import * as O from 'fp-ts/Option';
@@ -61,6 +60,9 @@ export default class LMDB implements ICache {
   };
 
   private _open = (): E.Either<Error, null> => {
+    // avoid CI pipeline error caused by native deeps
+    const lmdb = require('node-lmdb');
+
     const maybeCreatedDir = createDirIfNotExist(this.options.path)();
 
     if (maybeCreatedDir._tag === 'Left') {

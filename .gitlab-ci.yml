@@ -1,4 +1,4 @@
-image: mirzadipradhana/node:14.16.0-alpine
+image: node:14.16.0-alpine
 
 before_script:
   - which yarn && apk add --no-cache git
