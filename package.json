@@ -1,6 +1,6 @@
 {
   "name": "warlock",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Warung Pintar Mock + Foward Proxy API",
   "keywords": [
     "mock",
