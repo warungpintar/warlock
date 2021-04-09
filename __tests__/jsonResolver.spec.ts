@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { Config } from '../src/types/config-combine';
-import { runForTest, purgeCache } from '../src/express';
+import { run, purgeCache } from '../src';
 
 const config: Config = {
   rest: {
@@ -40,7 +40,7 @@ describe('json resolver', () => {
     purgeCache();
   });
 
-  const app = runForTest(config);
+  const app = run({ port: 3000, config });
 
   it('(MOCKPUBAPI07) should response 200 and cache miss', (done) => {
     request(app)

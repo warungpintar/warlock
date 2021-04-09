@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import * as O from 'fp-ts/Option';
 import { flow } from 'fp-ts/function';
-import { app } from '../express';
+import { app } from '../';
 import {
   parseUrl,
   pathTransform,
@@ -12,7 +12,7 @@ import {
   HttpVerbs,
 } from '../utils';
 
-const resolverMiddleware: RequestHandler = (req, res, next) => {
+export const resolverMiddleware: RequestHandler = (req, res, next) => {
   const maybeUrl = parseUrl(req.path.slice(1));
 
   O.fold(next, (url: URL) => {
@@ -37,5 +37,3 @@ const resolverMiddleware: RequestHandler = (req, res, next) => {
     next();
   })(maybeUrl);
 };
-
-export default resolverMiddleware;

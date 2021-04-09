@@ -4,12 +4,13 @@ import chalk from 'chalk';
 import { pipe } from 'fp-ts/function';
 import { bimap } from 'fp-ts/Either';
 
-import { run } from '../express';
+import { run } from '../';
 import { getConfig } from '../config';
 import { fileWatcher } from './watcher';
-import { logger } from '../logger';
+import { logger } from '../libs';
 import { getPatResolvers } from '../utils';
 import { PATH_RESOLVER_DIR } from '../constant';
+import { Server } from 'http';
 
 const runServer = (config: string, port: number) => {
   console.clear();
@@ -47,7 +48,7 @@ const runServer = (config: string, port: number) => {
         logger.info('building resolvers');
         console.timeEnd(`building ${pathResolvers.length} resolvers`);
 
-        const server = run({ port, config: c });
+        const server = run({ port, config: c }) as Server;
 
         // watch resolvers
         pathResolvers.forEach((resolverPath) => {

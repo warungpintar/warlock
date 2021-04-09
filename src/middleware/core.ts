@@ -1,12 +1,14 @@
 import { RequestHandler } from 'express';
 import * as O from 'fp-ts/Option';
-import restMiddleware from './restMiddleware';
-import graphqlMiddleware from './grapqhlMiddleware';
+import { restMiddleware } from './rest';
+import { graphqlMiddleware } from './graphql';
 
 import { parseUrl } from '../utils';
 import { ICache } from '../libs/cache';
 
-const coreMiddleware = (cache: ICache): RequestHandler => (...handler) => {
+export const coreMiddleware = (cache: ICache): RequestHandler => (
+  ...handler
+) => {
   const [req, , next] = handler;
   const maybeUrl = parseUrl(req.path.slice(1));
 
@@ -18,5 +20,3 @@ const coreMiddleware = (cache: ICache): RequestHandler => (...handler) => {
     }
   })(maybeUrl);
 };
-
-export default coreMiddleware;

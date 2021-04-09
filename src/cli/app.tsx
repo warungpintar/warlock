@@ -8,8 +8,8 @@ import { format } from 'date-fns';
 import runServer from './runServer';
 import packageJson from '../../package.json';
 import event from './event';
-import { RestEvent } from '../logger';
-import { cleanup } from '../express';
+import { RestEvent } from '../libs';
+import { cleanup } from '../';
 
 // clear the console
 console.clear();

@@ -8,7 +8,7 @@ export interface ICache {
   get: (key: string) => string | undefined;
   set: (key: string, value: string) => boolean;
   reset: () => E.Either<Error, null>;
-  close?: () => void;
+  close: () => void;
 }
 
 export interface MemoryOption {

@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import event from './cli/event';
+import event from '../cli/event';
 import { createLogger, format, transports } from 'winston';
 
 export interface RestEvent {

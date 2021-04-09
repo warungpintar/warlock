@@ -22,12 +22,16 @@ lint:
   script:
     - yarn --non-interactive --non-progress --ignore-scripts
     - yarn test:lint
+  tags:
+    - gke
 
 unit-test:
   stage: test
   script:
     - yarn --non-interactive --non-progress --ignore-scripts
     - yarn test:unit
+  tags:
+    - gke
 
 release:
   stage: release
@@ -37,3 +41,5 @@ release:
     - yarn semantic-release
   only:
     - master
+  tags:
+    - gke

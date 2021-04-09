@@ -4,7 +4,7 @@ import * as E from 'fp-ts/Either';
 import { ICache } from '../libs/cache';
 import { getCacheKey, encode, decode } from '../libs/cacheHttp';
 import { concatHeaders } from '../libs/http';
-import { logger, debugable } from '../logger';
+import { logger, debugable } from '../libs';
 
 const instance = axios.create({
   withCredentials: true,
@@ -13,7 +13,7 @@ const instance = axios.create({
   validateStatus: () => true,
 });
 
-const restMiddleware = (cache: ICache) => (url: URL): RequestHandler => (
+export const restMiddleware = (cache: ICache) => (url: URL): RequestHandler => (
   req,
   res,
   next,
@@ -95,5 +95,3 @@ const restMiddleware = (cache: ICache) => (url: URL): RequestHandler => (
     })
     .finally(next);
 };
-
-export default restMiddleware;

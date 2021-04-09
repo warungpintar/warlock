@@ -1,5 +1,5 @@
 import path from 'path';
-import { run } from './express';
+import { run } from './';
 import { getConfig } from './config';
 import * as F from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
