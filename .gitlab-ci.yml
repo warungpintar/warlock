@@ -2,7 +2,7 @@ image: node:14.16.0-alpine
 
 before_script:
   - which yarn && apk add --no-cache git
-  - echo //gitlab.warungpintar.co/api/v4/projects/{CI_PROJECT_ID}/packages/npm/:_authToken="$CI_JOB_TOKEN" >> ~/.npmrc
+  - echo //gitlab.warungpintar.co/api/v4/projects/{CI_PROJECT_ID}/packages/npm/:_authToken="$GITLAB_NPM_TOKEN" >> ~/.npmrc
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -11,7 +11,7 @@ cache:
     - .npm/
 
 variables:
-  NPM_TOKEN: ${CI_JOB_TOKEN}
+  NPM_TOKEN: ${GITLAB_NPM_TOKEN}
 
 stages:
   - test
