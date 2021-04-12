@@ -1,5 +1,5 @@
 {
-  "name": "warlock",
+  "name": "@warungpintar/warlock",
   "version": "1.0.1",
   "description": "Warung Pintar Mock + Foward Proxy API",
   "keywords": [

@@ -11,10 +11,8 @@ image: node:14.16.0-alpine
 
 before_script:
   - which yarn && apk add --no-cache git
-  - echo //gitlab.warungpintar.co/api/v4/projects/{CI_PROJECT_ID}/packages/npm/:_authToken="$GITLAB_NPM_TOKEN" >> ~/.npmrc
-
-variables:
-  NPM_TOKEN: ${GITLAB_NPM_TOKEN}
+  - echo registry=https://gitlab.warungpintar.co/api/v4/projects/${CI_PROJECT_ID}/packages/npm/ >> ~/.npmrc
+  - echo //gitlab.warungpintar.co/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${NPM_TOKEN} >> ~/.npmrc
 
 stages:
   - test
@@ -27,7 +25,7 @@ lint:
     - yarn --non-interactive --non-progress --ignore-scripts
     - yarn test:lint
   tags:
-    - gke
+    - gke-node
 
 unit-test:
   stage: test
@@ -36,7 +34,7 @@ unit-test:
     - yarn --non-interactive --non-progress --ignore-scripts
     - yarn test:unit
   tags:
-    - gke
+    - gke-node
 
 release:
   stage: release
@@ -48,4 +46,4 @@ release:
   only:
     - master
   tags:
-    - gke
+    - gke-node
