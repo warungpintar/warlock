@@ -50,7 +50,7 @@ const removeDir = (dirPath: string): IOE.IOEither<Error, string> => {
 export const removeDirIfExist = (
   dirPath: string,
 ): IOE.IOEither<Error, string> =>
-  pipe(checkDirectoryExist(dirPath), IOE.chain(removeDir));
+  pipe(IOE.of(dirPath), IOE.chain(checkDirectoryExist), IOE.chain(removeDir));
 
 export const createDir = (dirPath: string): IOE.IOEither<Error, string> =>
   IOE.tryCatch(() => {
