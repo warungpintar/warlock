@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as O from 'fp-ts/Option';
 import * as F from 'fp-ts/function';
 import { findFirst, reduce } from 'fp-ts/Array';

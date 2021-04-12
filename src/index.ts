@@ -1,3 +1,4 @@
+import 'array-flat-polyfill';
 import os from 'os';
 import path from 'path';
 import express from 'express';
@@ -16,6 +17,7 @@ import { buildDirPath } from './utils';
 import { WARLOCK_CACHE_DIR_NAME } from './constant';
 import { logger } from './libs';
 import { Config } from './types';
+import { graphqlMiddleware } from './middleware/graphql';
 
 export * from './types';
 export const app = express();
@@ -51,29 +53,34 @@ export const purgeCache = () =>
 
 event.on('purge', purgeCache);
 
-// body parser and multer
-app.use(parserMiddleware);
+const init = () => {
+  // body parser and multer
+  app.use(parserMiddleware);
+  app.use('/graphql', graphqlMiddleware(app.get('config')));
+  app.use('/', express.static(path.join(__dirname, '../../www')));
+  app.use('/api', apiRoutes);
 
-app.use('/', express.static(path.join(__dirname, '../../www')));
-app.use('/api', apiRoutes);
+  app.use(coreMiddleware(cacheInstance));
+  app.use(resolverMiddleware);
+  app.use((_, res) => {
+    if (
+      typeof res.locals === 'object' &&
+      Object.keys(res.locals).length === 0
+    ) {
+      return res.sendFile(path.join(__dirname, '../../www/index.html'));
+    }
 
-app.use(coreMiddleware(cacheInstance));
-app.use(resolverMiddleware);
-app.use((_, res) => {
-  if (typeof res.locals === 'object' && Object.keys(res.locals).length === 0) {
-    return res.sendFile(path.join(__dirname, '../../www/index.html'));
-  }
+    if (typeof res.locals === 'object') {
+      res.set('Content-Type', 'application/json; charset=utf-8');
+      res.set('Access-Control-Allow-Origin', '*');
+    }
 
-  if (typeof res.locals === 'object') {
-    res.set('Content-Type', 'application/json; charset=utf-8');
-    res.set('Access-Control-Allow-Origin', '*');
-  }
-
-  res.send(res.locals);
-});
-
+    res.send(res.locals);
+  });
+};
 export const run = ({ port, config }: { port: number; config: Config }) => {
   app.set('config', config);
+  init();
 
   if (IS_TEST_ENV) {
     return app;
