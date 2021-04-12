@@ -14,6 +14,7 @@ import {
 
 export const resolverMiddleware: RequestHandler = (req, res, next) => {
   const maybeUrl = parseUrl(req.path.slice(1));
+  const assignParams = (params: any) => (req.params = params);
 
   O.fold(next, (url: URL) => {
     const config: any = app.get('config');
@@ -21,7 +22,7 @@ export const resolverMiddleware: RequestHandler = (req, res, next) => {
 
     const pathModifier = flow(
       parseModule(url),
-      O.chain(parseModulePathHandler(url)),
+      O.chain(parseModulePathHandler(url, assignParams)),
       O.chain(parseModuleMethodHandler(req.method.toLowerCase() as HttpVerbs)),
       O.map(transformFieldHandler({ req, res })),
       O.fold(

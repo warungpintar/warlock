@@ -64,13 +64,22 @@ export const resolverMapper = (context: Context, rootData: any) => (
 export const parseModule = (url: URL) => (config: Module[]) =>
   findFirst((module: Module) => module.origin === url.origin)(config);
 
-export const parseModulePathHandler = (url: URL) => (module: Module) => {
+export const parseModulePathHandler = (
+  url: URL,
+  paramsCb?: (params: any) => void,
+) => (module: Module) => {
   const pathHandlerKey = Object.keys(module.transforms ?? {}).find((item) => {
     if (item === url.pathname) return true;
 
     const pattern = new UrlPattern(item);
+    const params = pattern.match(url.pathname);
 
-    if (pattern.match(url.pathname)) return true;
+    if (params) {
+      if (paramsCb) {
+        paramsCb(params);
+      }
+      return true;
+    }
 
     return false;
   });
