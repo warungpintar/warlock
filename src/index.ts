@@ -64,7 +64,7 @@ app.use((_, res) => {
     return res.sendFile(path.join(__dirname, '../../www/index.html'));
   }
 
-  if (typeof res.locals === 'object' && !IS_TEST_ENV) {
+  if (typeof res.locals === 'object') {
     res.set('Content-Type', 'application/json; charset=utf-8');
     res.set('Access-Control-Allow-Origin', '*');
   }
