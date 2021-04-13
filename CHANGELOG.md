@@ -1,3 +1,15 @@
+# [1.1.0](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.0.1...v1.1.0) (2021-04-13)
+
+
+### Bug Fixes
+
+* **build:** fix ts infer type error ([ff1ec3d](https://gitlab.warungpintar.co/warungpintar/warlock/commit/ff1ec3dbca7e34440c8a3b9ea10ce5aa4ee6a634))
+
+
+### Features
+
+* implement graphql mesh ([19142c5](https://gitlab.warungpintar.co/warungpintar/warlock/commit/19142c500ccdfa3c1e5b99eeb232f7f3669c11b5))
+
 ## [1.0.1](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.0.0...v1.0.1) (2021-04-12)
 
 
