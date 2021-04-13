@@ -17,7 +17,7 @@ import { getMesh } from '@graphql-mesh/runtime';
 import { logger } from '../libs';
 import { YamlConfig } from '@graphql-mesh/types';
 
-export async function serveMesh(config: YamlConfig.Config, app: Router) {
+export default async (config: YamlConfig.Config, app: Router) => {
   let readyFlag = false;
 
   const meshConfig = await parseConfig(config);
@@ -129,4 +129,4 @@ export async function serveMesh(config: YamlConfig.Config, app: Router) {
     }));
   }
   return null;
-}
+};
