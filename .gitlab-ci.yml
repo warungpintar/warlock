@@ -27,6 +27,15 @@ lint:
   tags:
     - gke-node
 
+type:
+  stage: test
+  <<: *global_cache
+  script:
+    - yarn --non-interactive --non-progress --ignore-scripts
+    - yarn test:type
+  tags:
+    - gke-node
+
 unit-test:
   stage: test
   <<: *global_cache
