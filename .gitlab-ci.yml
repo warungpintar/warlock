@@ -27,12 +27,13 @@ lint:
   tags:
     - gke-node
 
-type:
+build-test:
   stage: test
   <<: *global_cache
   script:
     - yarn --non-interactive --non-progress --ignore-scripts
     - yarn test:type
+    - yarn build
   tags:
     - gke-node
 
