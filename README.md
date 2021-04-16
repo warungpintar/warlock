@@ -4,9 +4,7 @@
 
 ## INTRODUCTION
 
-Warlock adalah tool yang memungkinkan frontend developer untuk melakukan mocking API.
-
-Tidak seperti mocking library pada umumnya, Warlock memudahkan dalam melakukan mocking di baik pada API sudah ada/siap maupun belum ada/siap sekalipun.
+Warlock adalah tool untuk melakukan API mocking. Tidak seperti mocking library pada umumnya, Warlock memudahkan dalam melakukan mocking di baik pada API sudah ada/siap maupun belum ada/siap sekalipun.
 
 ### HOW IT WORKS
 
@@ -34,15 +32,13 @@ Jalankan `yarn config list` dan pastikan registry dengan scope @warungpintar tel
 #### Install as dev dependency
 
 ```bash
-yarn add --dev warlock
+yarn add --dev @warungpintar/warlock
 ```
 
 #### Install globally
 
 ```bash
-
-# Using Yarn
-yarn global add warlock
+yarn global add @warungpintar/warlock
 ```
 
 ### Add Warlock Config File
