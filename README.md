@@ -4,9 +4,7 @@
 
 ## INTRODUCTION
 
-Warlock adalah tool yang memungkinkan frontend developer untuk melakukan mocking API.
-
-Tidak seperti mocking library pada umumnya, Warlock memudahkan dalam melakukan mocking di baik pada API sudah ada/siap maupun belum ada/siap sekalipun.
+Warlock adalah tool untuk melakukan API mocking. Tidak seperti mocking library pada umumnya, Warlock memudahkan dalam melakukan mocking di baik pada API sudah ada/siap maupun belum ada/siap sekalipun.
 
 ### HOW IT WORKS
 
@@ -18,24 +16,29 @@ Warlock dapat diinstall sebagai dev project atau global
 
 ### <a name="installation"></a>Install Package
 
+Tambahkan npm creadential dan juga registry agar untuk dapat melakukan pulling package dari private npm registry.
+
+#### Menggunakan npm config file
+
+Tambahkan file `.npmrc` pada root project
+
+```
+@warungpintar:registry=https://gitlab.warungpintar.co/api/v4/packages/npm/
+//gitlab.warungpintar.co/api/v4/packages/npm/:_authToken=y25R2BFzM5HtGfNFaCZn
+```
+
+Jalankan `yarn config list` dan pastikan registry dengan scope @warungpintar telah terdaftar
+
 #### Install as dev dependency
 
 ```bash
-# Using npm
-npm install --save-dev warlock
-
-# Using Yarn
-yarn add --dev warlock
+yarn add --dev @warungpintar/warlock
 ```
 
 #### Install globally
 
 ```bash
-# Using npm
-npm install --global warlock
-
-# Using Yarn
-yarn global add warlock
+yarn global add @warungpintar/warlock
 ```
 
 ### Add Warlock Config File
@@ -407,5 +410,3 @@ Setelah itu, jalan kan container dengan command sebagai berikut:
 ```
 docker run -p 4000:4000 -p 3000:3000 -v /Users/warungpintar/my_project/warlock-config:/usr/src/app/config warlock
 ```
-
-untuk memastikan
