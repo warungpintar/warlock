@@ -14,7 +14,13 @@ Tedapat pada [RFC #16](https://docs.google.com/document/d/13-wPV_9RLVPHSVocu8aiV
 
 Warlock dapat diinstall sebagai dev project atau global
 
-### <a name="installation"></a>Install Package
+### Building warlock manually (recommended)
+
+Langkah-langkah dapat dilihat di [sini](#contributing)
+
+### <a name="installation"></a>Install Package from Registry
+
+> **Note:** might not works [Issue #1](https://gitlab.warungpintar.co/warungpintar/warlock/-/issues/1)
 
 Tambahkan npm creadential dan juga registry agar untuk dapat melakukan pulling package dari private npm registry.
 
@@ -212,7 +218,7 @@ Konfigurasi diatas artinya, lakukan transformation:
 3. pada field `name` di index pertama (index-0) dari field `results`, lalu
 4. gunakan `faker` resolver dengan API method yang digunakan adalah `name.firstName`
 
-### 3) Run Warlock
+### <a name="command"></a> 3) Run Warlock
 
 Jalankan Warlock dengan perintah dibawah ini:
 
@@ -410,3 +416,56 @@ Setelah itu, jalan kan container dengan command sebagai berikut:
 ```
 docker run -p 4000:4000 -p 3000:3000 -v /Users/warungpintar/my_project/warlock-config:/usr/src/app/config warlock
 ```
+
+## <a name="contributing"></a> Contributing
+
+Jika menemukan masalah dengan tool ini, silahkan open issue di repo ini. Contributions are more than welcome! :)
+
+### Build Warlock
+
+1. Clone repo
+   ```
+   git clone https://gitlab.warungpintar.co/warungpintar/warlock.git
+   ```
+2. Install all dependency
+   ```
+   yarn install
+   ```
+3. build package
+   ```
+   yarn build
+   ```
+
+### Install a Local Warlock
+
+#### As dev dependency
+
+Pastikan Warlock telah di build, lalu install warlock pada playground project sebagai dev dependency dengan perintah berikut:
+
+```
+npm install <path_to_warlock> -D
+```
+
+Jalankan Warlock dengan perintah berikut:
+
+```
+yarn warlock <command>
+```
+
+Command warlock dapat dilihat di [sini](#command)
+
+#### As global dependency
+
+Pastikan Warlock telah di build, lalu install warlock secara global dengan perintah berikut:
+
+```
+npm install -g .
+```
+
+Mengingat warlock di install secara global maka kita dapat menjalankan warlock melalui global binary. Jalankan Warlock dengan perintah berikut:
+
+```
+warlock <command>
+```
+
+Command warlock dapat dilihat di [sini](#command)
