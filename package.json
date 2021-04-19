@@ -42,6 +42,7 @@
     "build:www": "node scripts/build.js"
   },
   "dependencies": {
+    "@babel/runtime": "^7.13.10",
     "@graphql-mesh/cli": "^0.11.12",
     "@graphql-mesh/config": "^0.15.3",
     "@graphql-mesh/graphql": "^0.13.13",
