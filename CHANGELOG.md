@@ -1,3 +1,10 @@
+## [1.1.1](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.1.0...v1.1.1) (2021-04-19)
+
+
+### Bug Fixes
+
+* **dependency:** adding babel-runtime ([338edf1](https://gitlab.warungpintar.co/warungpintar/warlock/commit/338edf1cd832d500d03dafb63d1fc9efea83e323))
+
 # [1.1.0](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.0.1...v1.1.0) (2021-04-13)
 
 
