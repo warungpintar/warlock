@@ -42,6 +42,11 @@
     "build:www": "node scripts/build.js"
   },
   "dependencies": {
+    "@babel/core": "^7.12.17",
+    "@babel/plugin-transform-runtime": "^7.13.10",
+    "@babel/preset-env": "^7.12.17",
+    "@babel/preset-react": "^7.12.13",
+    "@babel/preset-typescript": "^7.12.17",
     "@babel/runtime": "^7.13.10",
     "@graphql-mesh/cli": "^0.11.12",
     "@graphql-mesh/config": "^0.15.3",
@@ -52,6 +57,7 @@
     "@semantic-release/changelog": "^5.0.1",
     "@warungpintar/ninshu": "^0.0.2",
     "axios": "^0.21.1",
+    "babel-preset-react-app": "^10.0.0",
     "body-parser": "^1.19.0",
     "chalk": "^4.1.0",
     "commander": "^7.1.0",
@@ -81,14 +87,10 @@
     "sort-object": "^3.0.3",
     "sort-object-keys": "^1.1.3",
     "ts-node": "^9.1.1",
-    "url-pattern": "^1.0.3"
+    "url-pattern": "^1.0.3",
+    "array-flat-polyfill": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.17",
-    "@babel/plugin-transform-runtime": "^7.13.10",
-    "@babel/preset-env": "^7.12.17",
-    "@babel/preset-react": "^7.12.13",
-    "@babel/preset-typescript": "^7.12.17",
     "@chakra-ui/react": "^1.4.1",
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "11.0.0",
@@ -123,7 +125,6 @@
     "@warungpintar/eslint-config-base": "^0.2.2",
     "@warungpintar/eslint-config-typescript": "^0.2.2",
     "@warungpintar/warpin-scripts": "*",
-    "array-flat-polyfill": "^1.0.1",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
     "babel-loader": "8.1.0",
