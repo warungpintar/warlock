@@ -1,4 +1,10 @@
-image: node:14
+image: node:14.16.0-alpine
+
+include:
+  - project: 'wartech/ci-template'
+    ref: master
+    file:
+      - 'common/verify-award-emoji/job-verify-thumbs.yaml'
 
 .cache: &global_cache
   cache:
@@ -15,17 +21,13 @@ before_script:
   - echo //gitlab.warungpintar.co/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${NPM_TOKEN} >> ~/.npmrc
 
 stages:
+  - pre-test
   - test
   - release
 
-lint:
-  stage: test
-  <<: *global_cache
-  script:
-    - yarn --non-interactive --non-progress
-    - yarn test:lint
-  tags:
-    - gke-node
+verify-thumbs-up:
+  extends: .verify-thumbs
+  stage: pre-test
 
 build-test:
   stage: test
@@ -34,6 +36,9 @@ build-test:
     - yarn --non-interactive --non-progress
     - yarn test:type
     - yarn build
+  only:
+    - merge_requests
+    - master
   tags:
     - gke-node
 
@@ -43,6 +48,9 @@ unit-test:
   script:
     - yarn --non-interactive --non-progress
     - yarn test:unit
+  only:
+    - merge_requests
+    - master
   tags:
     - gke-node
 
