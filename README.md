@@ -76,7 +76,7 @@ rest:
 +----------- handler, saat ini Warlock baru bisa mensupport REST API (GraphQL soon).
 ```
 
-## <a name="resolvers"></a>Resolvers
+## <a alt="resolvers name="resolvers"></a>Resolvers
 
 Resolver yang dissuport oleh Warlock saat ini, antara lain:
 
