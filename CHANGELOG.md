@@ -1,3 +1,10 @@
+## [1.1.5](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.1.4...v1.1.5) (2021-04-27)
+
+
+### Bug Fixes
+
+* fake fix ([78b5920](https://gitlab.warungpintar.co/warungpintar/warlock/commit/78b592021252c561779e6803a643ce9e0741c5b7))
+
 ## [1.1.4](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.1.3...v1.1.4) (2021-04-27)
 
 
