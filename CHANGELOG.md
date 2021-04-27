@@ -1,3 +1,10 @@
+## [1.1.3](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.1.2...v1.1.3) (2021-04-27)
+
+
+### Bug Fixes
+
+* fix distributed runtime ([7e4acfc](https://gitlab.warungpintar.co/warungpintar/warlock/commit/7e4acfc4064c6a179bbe09b866cafac1a1a76373))
+
 ## [1.1.2](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.1.1...v1.1.2) (2021-04-27)
 
 
