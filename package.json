@@ -26,8 +26,8 @@
     "lint": "eslint",
     "prebuild": "rimraf dist",
     "build": "concurrently yarn:build:*",
-    "build:esm": "cross-env NODE_ENV=production BUILD_ENV=esm babel src --extensions '.ts,.tsx' -d dist/esm --source-maps",
-    "build:cjs": "cross-env NODE_ENV=production BUILD_ENV=cjs babel src --extensions '.ts,.tsx' -d dist/cjs --source-maps",
+    "build:esm": "cross-env NODE_ENV=test BUILD_ENV=esm babel src --extensions '.ts,.tsx' -d dist/esm --source-maps",
+    "build:cjs": "cross-env NODE_ENV=test BUILD_ENV=cjs babel src --extensions '.ts,.tsx' -d dist/cjs --source-maps",
     "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
     "test": "concurrently yarn:test:*",
     "test:unit": "NODE_ENV=test jest",
@@ -224,12 +224,7 @@
   },
   "babel": {
     "presets": [
-      [
-        "react-app",
-        {
-          "absoluteRuntime": false
-        }
-      ]
+      "react-app"
     ]
   }
 }
