@@ -37,9 +37,7 @@
     "prepublishOnly": "pinst --disable",
     "postpublish": "pinst --enable",
     "start": "concurrently yarn:start:*",
-    "start:server": "nodemon src/server.ts --watch .warlock.yaml --watch src",
-    "start:www": "node scripts/start.js",
-    "build:www": "node scripts/build.js"
+    "start:server": "nodemon src/server.ts --watch .warlock.yaml --watch src"
   },
   "dependencies": {
     "@babel/core": "^7.12.17",
