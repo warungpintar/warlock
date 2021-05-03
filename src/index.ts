@@ -1,6 +1,5 @@
 import 'array-flat-polyfill';
 import os from 'os';
-import path from 'path';
 import express from 'express';
 import * as E from 'fp-ts/Either';
 import * as F from 'fp-ts/function';
@@ -57,7 +56,6 @@ const init = () => {
   // body parser and multer
   app.use(parserMiddleware);
   app.use('/graphql', graphqlMiddleware(app.get('config')));
-  app.use('/', express.static(path.join(__dirname, '../../www')));
   app.use('/api', apiRoutes);
 
   app.use(coreMiddleware(cacheInstance));
@@ -67,7 +65,7 @@ const init = () => {
       typeof res.locals === 'object' &&
       Object.keys(res.locals).length === 0
     ) {
-      return res.sendFile(path.join(__dirname, '../../www/index.html'));
+      res.status(400);
     }
 
     if (typeof res.locals === 'object') {
