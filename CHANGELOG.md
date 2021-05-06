@@ -1,3 +1,10 @@
+## [1.1.9](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.1.8...v1.1.9) (2021-05-06)
+
+
+### Reverts
+
+* Revert "fix: remove www" ([fb4b567](https://gitlab.warungpintar.co/warungpintar/warlock/commit/fb4b567a239421cbd389d25bd3621d6920eeecd4))
+
 ## [1.1.8](https://gitlab.warungpintar.co/warungpintar/warlock/compare/v1.1.7...v1.1.8) (2021-05-05)
 
 
