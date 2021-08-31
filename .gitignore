@@ -7,4 +7,5 @@ build/
 .autoenv.zsh
 yarn-error.log
 .cache
+.DS_Store
 /.warlock.yaml

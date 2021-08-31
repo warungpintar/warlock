@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import axios, { Method } from 'axios';
+import ms from 'ms';
 import * as E from 'fp-ts/Either';
 import { ICache } from '../libs/cache';
 import { getCacheKey, encode, decode } from '../libs/cacheHttp';
@@ -8,6 +9,7 @@ import { logger, debugable } from '../libs';
 
 const instance = axios.create({
   withCredentials: true,
+  timeout: ms('5s'),
   // all http status code will handled as positive (then) instead of negative (catch)
   // so the proxy can pipe all kind of response.
   validateStatus: () => true,
@@ -28,6 +30,8 @@ export const restMiddleware = (cache: ICache) => (url: URL): RequestHandler => (
       res.set('x-warlock-cache', 'HIT');
       debugable(req, _cachedResponse);
       next();
+    } else {
+      res.locals = {};
     }
   };
 
@@ -89,9 +93,11 @@ export const restMiddleware = (cache: ICache) => (url: URL): RequestHandler => (
     .catch((e) => {
       logger.error(JSON.stringify(e));
 
-      if (req.method.toLocaleLowerCase() !== 'get') {
+      if (req.method.toLocaleLowerCase() === 'get') {
+        res.locals = {};
+        next();
+      } else {
         responseWithCache(cacheKey);
       }
-    })
-    .finally(next);
+    });
 };
