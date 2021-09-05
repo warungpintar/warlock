@@ -62,20 +62,17 @@ const init = () => {
 
   app.use(coreMiddleware(cacheInstance));
   app.use(resolverMiddleware);
-  app.use((_, res) => {
-    if (
-      typeof res.locals === 'object' &&
-      Object.keys(res.locals).length === 0
-    ) {
-      return res.sendFile(path.join(__dirname, '../www/index.html'));
-    }
-
+  app.use((req, res) => {
     if (typeof res.locals === 'object') {
       res.set('Content-Type', 'application/json; charset=utf-8');
       res.set('Access-Control-Allow-Origin', '*');
     }
 
-    res.send(res.locals);
+    if (!req.url.match(/^\/http/)) {
+      res.sendFile(path.join(__dirname, '../www/index.html'));
+    } else {
+      res.send(res.locals);
+    }
   });
 };
 export const run = ({ port, config }: { port: number; config: Config }) => {
